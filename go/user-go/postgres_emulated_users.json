@@ -1,0 +1,158 @@
+[
+  {
+    "id": "4cd83a74-999c-de5b-c299-d37368218a32",
+    "email": "di_user_POSTGRES_1788076063447419100@example.com",
+    "passwordHash": "hashed_secret123",
+    "phoneNumber": "+919876543210",
+    "role": "user",
+    "status": "deactivated",
+    "isVerified": false,
+    "profile": {
+      "id": "eebab482-6239-7fd6-2af7-42f876b18c18",
+      "userId": "4cd83a74-999c-de5b-c299-d37368218a32",
+      "name": "DI Test User",
+      "age": 28,
+      "gender": "female",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "Testing DI",
+      "interests": [
+        "Music",
+        "Travel"
+      ],
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T13:17:43+05:30",
+      "updatedAt": "2026-08-30T13:17:43+05:30"
+    },
+    "createdAt": "2026-08-30T13:17:43+05:30",
+    "updatedAt": "2026-08-30T13:17:43+05:30"
+  },
+  {
+    "id": "e3e9dfef-f2af-e016-6cff-9fca15d8f60c",
+    "email": "di_user_POSTGRES@example.com",
+    "passwordHash": "hashed_secret123",
+    "phoneNumber": "+919876543210",
+    "role": "user",
+    "status": "deactivated",
+    "isVerified": false,
+    "profile": {
+      "id": "13ac74c0-8a8e-cd1b-265e-c000d8138c9a",
+      "userId": "e3e9dfef-f2af-e016-6cff-9fca15d8f60c",
+      "name": "di_user_POSTGRES",
+      "age": 28,
+      "gender": "other",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [],
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T12:48:53+05:30",
+      "updatedAt": "2026-08-30T12:48:53+05:30"
+    },
+    "createdAt": "2026-08-30T12:48:53+05:30",
+    "updatedAt": "2026-08-30T12:48:53+05:30"
+  },
+  {
+    "id": "494e195f-953a-2bab-48f2-e26b8f8429ca",
+    "email": "di_user_POSTGRES_1788079601159216500@example.com",
+    "passwordHash": "hashed_secret123",
+    "phoneNumber": "+919876543210",
+    "role": "user",
+    "status": "deactivated",
+    "isVerified": false,
+    "profile": {
+      "id": "6b8e1a85-e08b-61f8-3431-fa1c46fdf316",
+      "userId": "494e195f-953a-2bab-48f2-e26b8f8429ca",
+      "name": "DI Test User",
+      "age": 28,
+      "gender": "female",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "Testing DI",
+      "interests": [
+        "Music",
+        "Travel"
+      ],
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T14:16:41+05:30",
+      "updatedAt": "2026-08-30T14:16:41+05:30"
+    },
+    "createdAt": "2026-08-30T14:16:41+05:30",
+    "updatedAt": "2026-08-30T14:16:41+05:30"
+  }
+]

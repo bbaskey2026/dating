@@ -1,0 +1,53 @@
+[
+  {
+    "id": "c11f86e5-e287-44f2-16d6-e8d015eed13f",
+    "email": "di_user_JSON@example.com",
+    "passwordHash": "hashed_secret123",
+    "phoneNumber": "+919876543210",
+    "role": "user",
+    "status": "deactivated",
+    "isVerified": false,
+    "profile": {
+      "id": "25b6e87b-ae21-e7d8-320a-e7b1b760b9dd",
+      "userId": "c11f86e5-e287-44f2-16d6-e8d015eed13f",
+      "name": "di_user_JSON",
+      "age": 28,
+      "gender": "other",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [],
+      "foodPreferences": null,
+      "musicInterests": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T12:48:53+05:30",
+      "updatedAt": "2026-08-30T12:48:53+05:30"
+    },
+    "createdAt": "2026-08-30T12:48:53+05:30",
+    "updatedAt": "2026-08-30T12:48:53+05:30"
+  }
+]

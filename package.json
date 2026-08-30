@@ -1,0 +1,13 @@
+{
+  "name": "topolgira",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Topolgira polyglot monorepo (Node.js + Go + Rust)",
+  "scripts": {
+    "build:node": "npm --prefix node run build",
+    "start:node": "npm --prefix node run start",
+    "test:node": "cd node/services/api-node && npx jest",
+    "test:go": "cd go/matching-go && go test -v ./...",
+    "test:rust": "cd rust/chat-rust && cargo test"
+  }
+}

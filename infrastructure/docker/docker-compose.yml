@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: topolgira-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: topolgira
+      POSTGRES_USER: topolgira_user
+      POSTGRES_PASSWORD: topolgira_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../../node/services/api-node/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  redis:
+    image: redis:7-alpine
+    container_name: topolgira-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  api-node:
+    build:
+      context: ../..
+      dockerfile: node/services/api-node/Dockerfile
+    container_name: topolgira-api-node
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://topolgira_user:topolgira_password@postgres:5432/topolgira
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: topolgira_prod_jwt_secret_2026
+    depends_on:
+      - postgres
+      - redis
+
+  user-go:
+    build:
+      context: ../../go/user-go
+      dockerfile: Dockerfile
+    container_name: topolgira-user-go
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+
+  matching-go:
+    build:
+      context: ../../go/matching-go
+      dockerfile: Dockerfile
+    container_name: topolgira-matching-go
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+
+  chat-go:
+    build:
+      context: ../../go/chat-go
+      dockerfile: Dockerfile
+    container_name: topolgira-chat-go
+    restart: always
+    ports:
+      - "9000:9000"
+    environment:
+      PORT: 9000
+      REDIS_URL: redis://redis:6379
+
+volumes:
+  postgres_data:

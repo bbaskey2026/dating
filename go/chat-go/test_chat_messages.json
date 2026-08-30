@@ -1,0 +1,18 @@
+{
+  "c1": [
+    {
+      "type": "message",
+      "chatId": "c1",
+      "senderId": "u1",
+      "receiverId": "u2",
+      "content": "Hello DI!"
+    },
+    {
+      "type": "message",
+      "chatId": "c1",
+      "senderId": "u1",
+      "receiverId": "u2",
+      "content": "Hello DI!"
+    }
+  ]
+}
