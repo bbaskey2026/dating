@@ -291,7 +291,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
           background: '#ffffff', 
           borderBottom: '1px solid #e2e8f0', 
           display: 'flex', 
-          justify: 'space-between', 
+          justifyContent: 'space-between', 
           alignItems: 'center' 
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -345,7 +345,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', marginBottom: '6px' }}>Say Hello to {activeContact.name}!</h4>
                 <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Break the ice with one of these quick openers:</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <button className="btn-secondary" style={{ fontSize: '12.5px', padding: '8px 14px', textStyle: 'left' }} onClick={() => sendChatMessage(`Hey ${activeContact.name}! 👋 Great to connect with you.`)}>
+                  <button className="btn-secondary" style={{ fontSize: '12.5px', padding: '8px 14px', textAlign: 'left' }} onClick={() => sendChatMessage(`Hey ${activeContact.name}! 👋 Great to connect with you.`)}>
                     "Hey {activeContact.name}! 👋 Great to connect with you."
                   </button>
                   <button className="btn-secondary" style={{ fontSize: '12.5px', padding: '8px 14px' }} onClick={() => sendChatMessage(`Hi ${activeContact.name}, loved your photos! How's your week going? ☕`)}>

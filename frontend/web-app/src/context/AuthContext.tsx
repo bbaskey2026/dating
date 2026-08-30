@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { EnterpriseApiClient } from '../services/api';
+import { AuthService } from '../api';
 
 interface User {
   id: string;
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     setError(null);
     try {
-      const res = await EnterpriseApiClient.login(email, pass);
+      const res = await AuthService.login(email, pass);
       if (res.success) {
         const u = res.data.user;
         const t = res.data.accessToken;
@@ -69,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     setError(null);
     try {
-      const res = await EnterpriseApiClient.register(payload);
+      const res = await AuthService.register(payload);
       if (res.success) {
         const u = res.data.user;
         const t = res.data.accessToken;
@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     if (token) {
-      EnterpriseApiClient.logout(token);
+      AuthService.logout(token);
     }
     setUser(null);
     setToken(null);

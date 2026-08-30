@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import type { Candidate } from '../services/api';
-import { EnterpriseApiClient } from '../services/api';
+import type { Candidate } from '../api';
+import { MatchesService } from '../api';
 import { X, Heart, MessageSquare, MapPin, Briefcase, Sparkles } from 'lucide-react';
 
 interface SwipePageProps {
@@ -20,7 +20,7 @@ export const SwipePage: React.FC<SwipePageProps> = ({ candidates, onStartChat })
     if (direction === 'right' && activeCandidate) {
       try {
         const token = localStorage.getItem('token') || '';
-        const res = await EnterpriseApiClient.sendLike(activeCandidate.id, token);
+        const res = await MatchesService.sendLike(activeCandidate.id, token);
         if (res?.message === 'ITS_A_MATCH' || res?.data?.isMatch) {
           setMatchBanner(`🎉 It's a Mutual Match with ${activeCandidate.name}!`);
           setTimeout(() => setMatchBanner(null), 4000);

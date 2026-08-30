@@ -12,8 +12,8 @@ import { ChatPage } from './pages/ChatPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ShowcasePage } from './pages/ShowcasePage';
 import { LandingPage } from './pages/LandingPage';
-import type { Candidate } from './services/api';
-import { EnterpriseApiClient } from './services/api';
+import type { Candidate } from './api';
+import { MatchesService } from './api';
 
 const INITIAL_CANDIDATES: Candidate[] = [
   {
@@ -79,7 +79,7 @@ export function AppContent() {
 
   const fetchLiveCandidates = async () => {
     try {
-      const data = await EnterpriseApiClient.getProfiles();
+      const data = await MatchesService.getProfiles();
       if (data.success && data.data.length > 0) {
         const mapped: Candidate[] = data.data.map((p: any, idx: number) => ({
           id: p.userId || p.id,

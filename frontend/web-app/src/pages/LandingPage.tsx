@@ -9,19 +9,16 @@ import {
   ShieldCheck, 
   Zap, 
   ArrowRight, 
-  Users, 
-  CheckCircle2, 
   Star,
-  MessageCircle,
   Flame
 } from 'lucide-react';
-import type { Candidate } from '../services/api';
+import type { Candidate } from '../api';
 
 interface LandingPageProps {
   candidates?: Candidate[];
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ candidates = [] }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ candidates: _candidates = [] }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 

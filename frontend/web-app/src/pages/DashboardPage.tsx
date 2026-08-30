@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { EnterpriseApiClient } from '../services/api';
+import { DashboardService, HealthService } from '../api';
 import { Heart, ThumbsUp, Sparkles, ShieldCheck, Mail, MapPin, Briefcase } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
@@ -14,7 +14,7 @@ export const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     if (token) {
-      EnterpriseApiClient.getDashboard(token).then(res => {
+      DashboardService.getDashboard(token).then(res => {
         if (res.success) {
           setDashboardData(res.data);
         }
@@ -23,7 +23,7 @@ export const DashboardPage: React.FC = () => {
       });
     }
 
-    EnterpriseApiClient.checkServicesHealth().then(health => {
+    HealthService.checkServicesHealth().then(health => {
       setServiceHealth(health);
     });
   }, [token]);
