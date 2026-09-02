@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import { HeaderBar } from './components/HeaderBar';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
@@ -12,106 +13,65 @@ import { ChatPage } from './pages/ChatPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ShowcasePage } from './pages/ShowcasePage';
 import { LandingPage } from './pages/LandingPage';
+import { ProfileDetailsModal } from './components/ProfileDetailsModal';
+import { MatchNotificationModal } from './components/MatchNotificationModal';
+import { ToastNotificationContainer } from './components/ToastNotificationContainer';
 import type { Candidate } from './api';
 import { MatchesService } from './api';
 
-const INITIAL_CANDIDATES: Candidate[] = [
-  {
-    id: 'user_b',
-    name: 'Ananya Sharma',
-    age: 24,
-    gender: 'female',
-    city: 'Ranchi',
-    profession: 'UI/UX Designer',
-    relationshipGoal: 'marriage',
-    bio: 'Loves classical music, weekend travel, and authentic street food.',
-    matchScore: 94,
-    interests: ['Music', 'Travel', 'Movies', 'Art'],
-    photos: ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'],
-  },
-  {
-    id: 'user_c',
-    name: 'Priya Hansda',
-    age: 23,
-    gender: 'female',
-    city: 'Jamshedpur',
-    profession: 'Architect',
-    relationshipGoal: 'serious_relationship',
-    bio: 'Exploring heritage architecture, hiking, and acoustic guitar.',
-    matchScore: 89,
-    interests: ['Travel', 'Music', 'Cricket', 'Photography'],
-    photos: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80'],
-  },
-  {
-    id: 'user_d',
-    name: 'Sneha Murmu',
-    age: 25,
-    gender: 'female',
-    city: 'Ranchi',
-    profession: 'Data Scientist',
-    relationshipGoal: 'marriage',
-    bio: 'AI enthusiast, loves cycling around Kanke Dam and listening to indie pop.',
-    matchScore: 85,
-    interests: ['Technology', 'Gaming', 'Music', 'Fitness'],
-    photos: ['https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80'],
-  },
-  {
-    id: 'user_e',
-    name: 'Rahul Soren',
-    age: 26,
-    gender: 'male',
-    city: 'Dhanbad',
-    profession: 'Software Engineer',
-    relationshipGoal: 'marriage',
-    bio: 'Avid coder, loves playing guitar and watching cricket matches.',
-    matchScore: 78,
-    interests: ['Cricket', 'Technology', 'Music', 'Gaming'],
-    photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'],
-  },
-];
-
 export function AppContent() {
+  const { user } = useAuth();
+  const { activeMatch, triggerMatchCelebration, closeMatchModal, sendWebSocketEvent } = useNotifications();
   const navigate = useNavigate();
   const location = useLocation();
   const isLandingPage = location.pathname === '/' || location.pathname === '/landing';
-  const [candidates, setCandidates] = useState<Candidate[]>(INITIAL_CANDIDATES);
-  const [selectedCandidate, setSelectedCandidate] = useState<Candidate>(INITIAL_CANDIDATES[0]);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [inspectingCandidate, setInspectingCandidate] = useState<Candidate | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchLiveCandidates = async () => {
+  const fetchLiveCandidates = useCallback(async () => {
     try {
       const data = await MatchesService.getProfiles();
-      if (data.success && data.data.length > 0) {
+      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
         const mapped: Candidate[] = data.data.map((p: any, idx: number) => ({
           id: p.userId || p.id,
           name: p.name || 'Candidate',
           age: p.age || 24,
           gender: p.gender || 'female',
           city: p.city || 'Ranchi',
-          profession: p.profession || 'Software Engineer',
+          profession: p.profession || 'Professional',
+          education: p.education || '',
           relationshipGoal: p.relationshipGoal || 'marriage',
-          bio: p.bio || 'Loves music and technology.',
-          matchScore: Math.floor(75 + Math.random() * 23),
-          interests: p.interests?.length ? p.interests : ['Music', 'Travel'],
-          photos: p.photos?.length ? p.photos : ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'],
+          bio: p.bio || 'Exploring meaningful connections on Topolgira.',
+          matchScore: p.matchScore || Math.floor(78 + (idx * 3) % 20),
+          interests: Array.isArray(p.interests) && p.interests.length ? p.interests : ['Music', 'Travel', 'Art'],
+          languages: Array.isArray(p.languages) && p.languages.length ? p.languages : ['Hindi', 'English'],
+          hobbies: Array.isArray(p.hobbies) && p.hobbies.length ? p.hobbies : ['Photography', 'Music'],
+          foodPreferences: Array.isArray(p.foodPreferences) && p.foodPreferences.length ? p.foodPreferences : ['Street Food', 'Biryani'],
+          musicInterests: Array.isArray(p.musicInterests) && p.musicInterests.length ? p.musicInterests : ['Indie', 'Bollywood'],
+          photos: Array.isArray(p.photos) && p.photos.length ? p.photos : ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80'],
           isRecentlyRegistered: idx < 3,
+          verified: true,
         }));
 
-        setCandidates(() => {
-          const existingIds = new Set(mapped.map(m => m.id));
-          const filteredInitial = INITIAL_CANDIDATES.filter(ic => !existingIds.has(ic.id));
-          return [...mapped, ...filteredInitial];
-        });
+        setCandidates(mapped);
+        if (!selectedCandidate && mapped.length > 0) {
+          setSelectedCandidate(mapped[0]);
+        }
       }
     } catch (err) {
-      console.warn('Backend API offline, using initial candidates');
+      console.warn('Backend API offline or fetching error:', err);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [selectedCandidate]);
 
   useEffect(() => {
     fetchLiveCandidates();
-    const interval = setInterval(fetchLiveCandidates, 10000);
+    const interval = setInterval(fetchLiveCandidates, 8000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchLiveCandidates]);
 
   const handleStartChat = (cand: Candidate) => {
     setSelectedCandidate(cand);
@@ -120,6 +80,49 @@ export function AppContent() {
 
   const handleAddCandidate = (newCand: Candidate) => {
     setCandidates(prev => [newCand, ...prev]);
+  };
+
+  const handleInspectProfile = (cand: Candidate) => {
+    setInspectingCandidate(cand);
+  };
+
+  const handleLikeFromModal = async (cand: Candidate) => {
+    try {
+      const res = await MatchesService.sendLike(cand.id);
+      // Broadcast live real-time like event
+      if (user?.id) {
+        sendWebSocketEvent({
+          type: 'like',
+          senderId: user.id,
+          receiverId: cand.id,
+        });
+      }
+
+      if (res?.message === 'ITS_A_MATCH' || res?.data?.isMatch) {
+        triggerMatchCelebration(cand);
+        // Broadcast live match celebration event to partner
+        if (user?.id) {
+          sendWebSocketEvent({
+            type: 'match',
+            senderId: user.id,
+            receiverId: cand.id,
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleMatchTriggered = (cand: Candidate) => {
+    triggerMatchCelebration(cand);
+    if (user?.id) {
+      sendWebSocketEvent({
+        type: 'match',
+        senderId: user.id,
+        receiverId: cand.id,
+      });
+    }
   };
 
   return (
@@ -134,14 +137,102 @@ export function AppContent() {
           <Route path="/register" element={<RegisterPage onCandidateAdded={handleAddCandidate} />} />
 
           {/* STRICTLY PROTECTED ROUTES - REQUIRES LOGIN */}
-          <Route path="/swipe" element={<ProtectedRoute featureName="Candidate Swipe Deck"><SwipePage candidates={candidates} onStartChat={handleStartChat} /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute featureName="User Dashboard & SLA Analytics"><DashboardPage /></ProtectedRoute>} />
-          <Route path="/catalog" element={<ProtectedRoute featureName="Registered Profiles Catalog"><CatalogPage candidates={candidates} onRefresh={fetchLiveCandidates} onStartChat={handleStartChat} /></ProtectedRoute>} />
-          <Route path="/chat" element={<ProtectedRoute featureName="Realtime WebSocket Chat"><ChatPage selectedCandidate={selectedCandidate} candidates={candidates} onSelectCandidate={setSelectedCandidate} /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute featureName="Profile & Discovery Settings"><SettingsPage /></ProtectedRoute>} />
-          <Route path="/showcase" element={<ProtectedRoute featureName="All Components Showcase"><ShowcasePage candidates={candidates} selectedCandidate={selectedCandidate} onRefresh={fetchLiveCandidates} onStartChat={handleStartChat} /></ProtectedRoute>} />
+          <Route 
+            path="/swipe" 
+            element={
+              <ProtectedRoute featureName="Candidate Swipe Deck">
+                <SwipePage 
+                  candidates={candidates} 
+                  isLoading={isLoading}
+                  onStartChat={handleStartChat} 
+                  onInspectProfile={handleInspectProfile}
+                  onMatchTriggered={handleMatchTriggered}
+                />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute featureName="User Dashboard & SLA Analytics">
+                <DashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/catalog" 
+            element={
+              <ProtectedRoute featureName="Registered Profiles Catalog">
+                <CatalogPage 
+                  candidates={candidates} 
+                  isLoading={isLoading}
+                  onRefresh={fetchLiveCandidates} 
+                  onStartChat={handleStartChat}
+                  onInspectProfile={handleInspectProfile}
+                  onMatchTriggered={handleMatchTriggered}
+                />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/chat" 
+            element={
+              <ProtectedRoute featureName="Realtime WebSocket Chat">
+                <ChatPage 
+                  selectedCandidate={selectedCandidate || candidates[0] || null} 
+                  candidates={candidates} 
+                  onSelectCandidate={setSelectedCandidate}
+                  onInspectProfile={handleInspectProfile}
+                />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <ProtectedRoute featureName="Profile & Discovery Settings">
+                <SettingsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/showcase" 
+            element={
+              <ProtectedRoute featureName="All Components Showcase">
+                <ShowcasePage 
+                  candidates={candidates} 
+                  selectedCandidate={selectedCandidate || candidates[0]} 
+                  onRefresh={fetchLiveCandidates} 
+                  onStartChat={handleStartChat} 
+                />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </main>
+
+      {/* FULL PROFILE DETAILS INSPECTOR MODAL */}
+      <ProfileDetailsModal 
+        candidate={inspectingCandidate}
+        isOpen={!!inspectingCandidate}
+        onClose={() => setInspectingCandidate(null)}
+        onLike={handleLikeFromModal}
+        onStartChat={handleStartChat}
+      />
+
+      {/* MUTUAL MATCH CELEBRATION MODAL */}
+      <MatchNotificationModal 
+        candidate={activeMatch}
+        isOpen={!!activeMatch}
+        onClose={closeMatchModal}
+        onStartChat={handleStartChat}
+      />
+
+      {/* REALTIME TOAST NOTIFICATIONS POPUPS */}
+      <ToastNotificationContainer 
+        onStartChat={handleStartChat}
+        onInspectProfile={handleInspectProfile}
+      />
     </div>
   );
 }
@@ -149,9 +240,12 @@ export function AppContent() {
 export function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <NotificationProvider>
+        <AppContent />
+      </NotificationProvider>
     </AuthProvider>
   );
 }
 
 export default App;
+

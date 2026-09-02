@@ -1,6 +1,6 @@
 import { Response, Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { authenticateToken, AuthenticatedRequest } from '../../middleware/auth';
+import { authenticateToken, optionalAuthToken, AuthenticatedRequest } from '../../middleware/auth';
 import { ApiResponse, UserProfile } from '@topolgira/shared-types';
 import { Repositories } from '../../repositories/interfaces';
 import { logger } from '../../utils/logger';
@@ -146,10 +146,14 @@ export function createProfilesRouter(repos: Repositories): Router {
     });
   });
 
-  router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  router.get('/', optionalAuthToken, async (req: AuthenticatedRequest, res: Response) => {
     return logger.traceFn('listProfilesHandler', FILE_PATH, { route: '/profiles' }, async () => {
       const allProfiles = await repos.profiles.findAll();
-      const resp: ApiResponse<UserProfile[]> = { success: true, data: allProfiles };
+      const currentUserId = req.user?.userId;
+      const filteredProfiles = currentUserId
+        ? allProfiles.filter(p => p.userId !== currentUserId)
+        : allProfiles;
+      const resp: ApiResponse<UserProfile[]> = { success: true, data: filteredProfiles };
       return res.status(200).json(resp);
     });
   });

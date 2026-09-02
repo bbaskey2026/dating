@@ -10,7 +10,7 @@ export type DbDriver = 'json' | 'postgres';
  * Switches dynamically between file-based db.json and PostgreSQL real database schema
  */
 export function createRepositories(driver?: DbDriver): Repositories {
-  const selectedDriver = driver || (process.env.DB_DRIVER as DbDriver) || 'json';
+  const selectedDriver = driver || (process.env.DB_DRIVER as DbDriver) || 'postgres';
 
   logger.info(`Wiring DI repositories container`, { driver: selectedDriver.toUpperCase() });
 

@@ -9,7 +9,7 @@ import (
 // Dynamically switches between JSON file database (chat_messages.json) and Redis / DB storage
 func NewMessageRepository(driver, config string) MessageRepository {
 	if driver == "" {
-		driver = "json"
+		driver = "postgres"
 	}
 
 	slog.Info("🔌 [DI Container] Wiring Go MessageRepository container", slog.String("driver", strings.ToUpper(driver)))

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationContext';
 import { 
   LogIn, 
   UserPlus, 
@@ -26,6 +27,7 @@ interface HeaderBarProps {
 export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { user, logout } = useAuth();
+  const { unreadCount, wsConnected } = useNotifications();
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -60,8 +62,14 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
       </div>
 
       {!isCollapsed && (
-        <div className="sidebar-sla-tag">
-          <ShieldCheck size={13} /> SLA 99.99% Operational
+        <div className="sidebar-sla-tag" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <ShieldCheck size={13} /> SLA 99.99%
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10.5px', color: wsConnected ? '#10b981' : '#f59e0b', fontWeight: '800' }}>
+            <span className="online-indicator-dot" style={{ width: '6px', height: '6px', background: wsConnected ? '#10b981' : '#f59e0b' }}></span>
+            {wsConnected ? 'LIVE' : 'SYNC'}
+          </span>
         </div>
       )}
 
@@ -89,8 +97,20 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
               {!isCollapsed && <span>Candidates ({candidatesCount})</span>}
             </NavLink>
             <NavLink to="/chat" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Live Chat">
-              <MessageSquare size={20} />
-              {!isCollapsed && <span>Live Chat</span>}
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <MessageSquare size={20} />
+                {unreadCount > 0 && isCollapsed && (
+                  <span className="sidebar-badge-dot-compact"></span>
+                )}
+              </div>
+              {!isCollapsed && (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                  <span>Live Chat</span>
+                  {unreadCount > 0 && (
+                    <span className="sidebar-unread-pill">{unreadCount}</span>
+                  )}
+                </div>
+              )}
             </NavLink>
             <NavLink to="/settings" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Settings">
               <Settings size={20} />

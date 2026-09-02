@@ -13,7 +13,7 @@ type PostgresUserRepository struct {
 
 func NewPostgresUserRepository(connStr string) *PostgresUserRepository {
 	if connStr == "" {
-		connStr = "postgres://topolgira_user:topolgira_password@localhost:5432/topolgira"
+		connStr = "postgres://postgres:postgres@localhost:5432/topolgira"
 	}
 	return &PostgresUserRepository{
 		connStr:  connStr,

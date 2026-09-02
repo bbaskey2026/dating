@@ -4,14 +4,27 @@ export const NODE_GATEWAY_URL = 'http://localhost:4000';
 export const GO_MATCHING_URL = 'http://localhost:8080';
 export const GO_CHAT_URL = 'http://localhost:9000';
 
+export const getActiveToken = (): string => {
+  return sessionStorage.getItem('topolgira_token') || '';
+};
+
+export const getActiveUser = (): any => {
+  const saved = sessionStorage.getItem('topolgira_user');
+  if (!saved) return null;
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return null;
+  }
+};
+
 const attachAuthInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      const token = localStorage.getItem('topolgira_token') || localStorage.getItem('token');
+      const token = getActiveToken();
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-      config.headers['X-Client-Version'] = '2.4.0';
       return config;
     },
     (error) => Promise.reject(error)

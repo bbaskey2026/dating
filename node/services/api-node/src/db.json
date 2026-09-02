@@ -1779,6 +1779,530 @@
       },
       "createdAt": "2026-08-30T09:30:14.856Z",
       "updatedAt": "2026-08-30T09:30:14.856Z"
+    },
+    {
+      "id": "profile_user_ananya_01",
+      "userId": "user_ananya_01",
+      "name": "Ananya Sharma",
+      "age": 24,
+      "gender": "female",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "NID Ahmedabad (B.Des)",
+      "profession": "UI/UX Designer & Illustrator",
+      "relationshipGoal": "marriage",
+      "bio": "Loves classical music, indie coffee roasters, weekend hikes around Hundru Falls, and designing delightful mobile experiences.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Art",
+        "Design",
+        "Photography",
+        "Coffee"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Bengali"
+      ],
+      "hobbies": [
+        "Watercolor Painting",
+        "Acoustic Guitar",
+        "Baking",
+        "Trekking"
+      ],
+      "foodPreferences": [
+        "Street Food",
+        "Authentic Biryani",
+        "Matcha Latte",
+        "South Indian"
+      ],
+      "musicInterests": [
+        "Classical",
+        "Indie Folk",
+        "Acoustic",
+        "Coke Studio"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.579Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_priya_02",
+      "userId": "user_priya_02",
+      "name": "Priya Hansda",
+      "age": 23,
+      "gender": "female",
+      "city": "Jamshedpur",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Jamshedpur",
+        "country": "India"
+      },
+      "education": "IIT Kharagpur (B.Arch)",
+      "profession": "Sustainable Architect",
+      "relationshipGoal": "serious_relationship",
+      "bio": "Passionate about tribal vernacular architecture, cycling across Jubilee Park, playing ukulele, and collecting vintage vinyl records.",
+      "interests": [
+        "Architecture",
+        "Music",
+        "Cricket",
+        "Photography",
+        "Nature",
+        "Cinema"
+      ],
+      "languages": [
+        "Santhali",
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [
+        "Ukulele",
+        "Cycling",
+        "Architectural Sketching",
+        "Bouldering"
+      ],
+      "foodPreferences": [
+        "Local Tribal Delicacies",
+        "Spicy Momos",
+        "Fresh Pastas"
+      ],
+      "musicInterests": [
+        "Indie Rock",
+        "Jazz",
+        "Santhali Folk Fusion",
+        "Old Bollywood"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_sneha_03",
+      "userId": "user_sneha_03",
+      "name": "Sneha Murmu",
+      "age": 25,
+      "gender": "female",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "BIT Mesra (M.Tech CS)",
+      "profession": "AI & Data Scientist",
+      "relationshipGoal": "marriage",
+      "bio": "Building transformer models by day, exploring stargazing spots by night. Big fan of sci-fi novels, gaming tournaments, and late-night drives.",
+      "interests": [
+        "Technology",
+        "AI",
+        "Gaming",
+        "Music",
+        "Fitness",
+        "Astronomy"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Stargazing",
+        "Competitive Valorant",
+        "Running 10ks",
+        "Chess"
+      ],
+      "foodPreferences": [
+        "Ramen",
+        "Spicy Indian Curries",
+        "Chaat",
+        "Dark Chocolate"
+      ],
+      "musicInterests": [
+        "Synthwave",
+        "Electronic",
+        "A.R. Rahman",
+        "Lo-Fi Beats"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_aarav_04",
+      "userId": "user_aarav_04",
+      "name": "Aarav Gupta",
+      "age": 27,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "XLRI Jamshedpur (MBA)",
+      "profession": "Product Lead & Entrepreneur",
+      "relationshipGoal": "marriage",
+      "bio": "Startup builder with a love for badminton, specialty pour-overs, and weekend road trips to Patratu Valley. Looking for deep conversations & mutual growth.",
+      "interests": [
+        "Startups",
+        "Badminton",
+        "Travel",
+        "Reading",
+        "Philosophy"
+      ],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [
+        "Badminton",
+        "Pour-over Brewing",
+        "Book Club",
+        "Road Trips"
+      ],
+      "foodPreferences": [
+        "Mediterranean",
+        "North Indian",
+        "Filter Coffee"
+      ],
+      "musicInterests": [
+        "Acoustic Pop",
+        "Blues",
+        "Classic Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_riya_05",
+      "userId": "user_riya_05",
+      "name": "Riya Sengupta",
+      "age": 24,
+      "gender": "female",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Dhanbad",
+        "country": "India"
+      },
+      "education": "WBUAFS Kolkata (BVSc & AH)",
+      "profession": "Wildlife Veterinarian",
+      "relationshipGoal": "serious_relationship",
+      "bio": "Dog mom to two rescue golden retrievers. Passionate about animal rescue missions, wildlife photography, and experimenting with sourdough bread.",
+      "interests": [
+        "Animals",
+        "Nature",
+        "Photography",
+        "Baking",
+        "Volunteering"
+      ],
+      "languages": [
+        "Bengali",
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [
+        "Dog Agility Training",
+        "Wildlife Safaris",
+        "Sourdough Baking"
+      ],
+      "foodPreferences": [
+        "Authentic Bengali Fish Curry",
+        "Italian Pastas",
+        "Sweets"
+      ],
+      "musicInterests": [
+        "Rabindra Sangeet",
+        "Soft Rock",
+        "Folk"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_rahul_06",
+      "userId": "user_rahul_06",
+      "name": "Rahul Soren",
+      "age": 26,
+      "gender": "male",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Dhanbad",
+        "country": "India"
+      },
+      "education": "IIT (ISM) Dhanbad (B.Tech CSE)",
+      "profession": "Full-Stack Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Open source contributor, avid guitarist, and weekend cricketer. Always down for sunset walks, good music, and exploring new cuisines.",
+      "interests": [
+        "Cricket",
+        "Technology",
+        "Music",
+        "Gaming",
+        "Guitar"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Electric Guitar",
+        "Weekend Cricket League",
+        "Hackathons"
+      ],
+      "foodPreferences": [
+        "Litti Chokha",
+        "Tandoori Platters",
+        "Biryani"
+      ],
+      "musicInterests": [
+        "Rock",
+        "Indian Indie",
+        "Metal"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_tanvi_07",
+      "userId": "user_tanvi_07",
+      "name": "Tanvi Patel",
+      "age": 25,
+      "gender": "female",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "CIP Ranchi (M.Phil Clinical Psychology)",
+      "profession": "Clinical Psychologist",
+      "relationshipGoal": "marriage",
+      "bio": "Practicing mindfulness, pottery on weekends, and loving podcast discussions on human behavior. Seeking someone kind, thoughtful, and expressive.",
+      "interests": [
+        "Psychology",
+        "Mindfulness",
+        "Pottery",
+        "Books",
+        "Podcasts"
+      ],
+      "languages": [
+        "Gujarati",
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [
+        "Ceramic Pottery",
+        "Yoga & Meditation",
+        "Journaling"
+      ],
+      "foodPreferences": [
+        "Gujarati Thali",
+        "Avocado Toast",
+        "Herbal Teas"
+      ],
+      "musicInterests": [
+        "Ambient",
+        "Classical Sitar",
+        "Pop"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "profile_user_vikram_08",
+      "userId": "user_vikram_08",
+      "name": "Vikram Sethi",
+      "age": 28,
+      "gender": "male",
+      "city": "Jamshedpur",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Jamshedpur",
+        "country": "India"
+      },
+      "education": "Tata Steel Academy / NIT Jamshedpur",
+      "profession": "Senior Metallurgical Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Automotive enthusiast, marathon runner, and amateur jazz pianist. Believer in balanced living, strong family bonds, and world travel.",
+      "interests": [
+        "Automotive",
+        "Marathons",
+        "Jazz",
+        "Travel",
+        "Cooking"
+      ],
+      "languages": [
+        "Punjabi",
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [
+        "Marathon Training",
+        "Jazz Piano",
+        "Barbecue Grilling"
+      ],
+      "foodPreferences": [
+        "Tandoori Kebabs",
+        "Dal Makhani",
+        "Continental"
+      ],
+      "musicInterests": [
+        "Jazz",
+        "Soul",
+        "Punjabi Pop"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 100,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage",
+          "serious_relationship"
+        ]
+      },
+      "createdAt": "2026-08-30T16:23:48.581Z",
+      "updatedAt": "2026-08-30T16:23:48.581Z"
     }
   ],
   "likes": [

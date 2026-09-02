@@ -4,12 +4,12 @@ import { DashboardPage } from './DashboardPage';
 import { CatalogPage } from './CatalogPage';
 import { ChatPage } from './ChatPage';
 import { SettingsPage } from './SettingsPage';
-import type { Candidate } from '../services/api';
+import type { Candidate } from '../api';
 import { Layers } from 'lucide-react';
 
 interface ShowcasePageProps {
   candidates: Candidate[];
-  selectedCandidate: Candidate;
+  selectedCandidate: Candidate | null;
   onRefresh: () => void;
   onStartChat: (cand: Candidate) => void;
 }
@@ -28,7 +28,12 @@ export const ShowcasePage: React.FC<ShowcasePageProps> = ({ candidates, selected
 
       <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '30px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#ec4899', marginBottom: '14px' }}>1. Candidate Swipe Deck</h3>
-        <SwipePage candidates={candidates} onStartChat={onStartChat} />
+        <SwipePage 
+          candidates={candidates} 
+          onStartChat={onStartChat} 
+          onInspectProfile={() => {}}
+          onMatchTriggered={() => {}}
+        />
       </div>
 
       <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '30px' }}>
@@ -38,12 +43,18 @@ export const ShowcasePage: React.FC<ShowcasePageProps> = ({ candidates, selected
 
       <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '30px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#16a34a', marginBottom: '14px' }}>3. Candidate Catalog</h3>
-        <CatalogPage candidates={candidates} onRefresh={onRefresh} onStartChat={onStartChat} />
+        <CatalogPage 
+          candidates={candidates} 
+          onRefresh={onRefresh} 
+          onStartChat={onStartChat} 
+          onInspectProfile={() => {}}
+          onMatchTriggered={() => {}}
+        />
       </div>
 
       <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '30px', minHeight: '500px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#8b5cf6', marginBottom: '14px' }}>4. Live Chat</h3>
-        <ChatPage selectedCandidate={selectedCandidate} candidates={candidates} onSelectCandidate={onStartChat} />
+        <ChatPage selectedCandidate={selectedCandidate || candidates[0]} candidates={candidates} onSelectCandidate={onStartChat} />
       </div>
 
       <div>

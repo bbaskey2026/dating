@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     hobbies TEXT[] DEFAULT '{}',
     food_preferences TEXT[] DEFAULT '{}',
     music_interests TEXT[] DEFAULT '{}',
+    photos TEXT[] DEFAULT '{}',
     min_age_pref INT DEFAULT 18,
     max_age_pref INT DEFAULT 60,
     max_distance_km INT DEFAULT 50,

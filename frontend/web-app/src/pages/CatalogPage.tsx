@@ -1,59 +1,211 @@
-import React from 'react';
-import type { Candidate } from '../services/api';
-import { RefreshCw, Sparkles, MapPin, Briefcase, Heart, MessageSquare } from 'lucide-react';
+import React, { useState } from 'react';
+import type { Candidate } from '../api';
+import { MatchesService } from '../api';
+import { 
+  RefreshCw, 
+  Sparkles, 
+  MapPin, 
+  Briefcase, 
+  Heart, 
+  MessageSquare, 
+  Maximize2, 
+  GraduationCap,
+  ShieldCheck
+} from 'lucide-react';
 
 interface CatalogPageProps {
   candidates: Candidate[];
+  isLoading?: boolean;
   onRefresh: () => void;
   onStartChat: (cand: Candidate) => void;
+  onInspectProfile: (cand: Candidate) => void;
+  onMatchTriggered: (cand: Candidate) => void;
 }
 
-export const CatalogPage: React.FC<CatalogPageProps> = ({ candidates, onRefresh, onStartChat }) => {
+export const CatalogPage: React.FC<CatalogPageProps> = ({ 
+  candidates, 
+  isLoading = false,
+  onRefresh, 
+  onStartChat,
+  onInspectProfile,
+  onMatchTriggered
+}) => {
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [likeToast, setLikeToast] = useState<{ name: string; isMatch: boolean } | null>(null);
+
+  const handleLike = async (cand: Candidate, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      setLikedMap(prev => ({ ...prev, [cand.id]: true }));
+      const res = await MatchesService.sendLike(cand.id);
+      if (res?.message === 'ITS_A_MATCH' || res?.data?.isMatch) {
+        onMatchTriggered(cand);
+        setLikeToast({ name: cand.name, isMatch: true });
+      } else {
+        setLikeToast({ name: cand.name, isMatch: false });
+      }
+      setTimeout(() => setLikeToast(null), 3500);
+    } catch (err) {
+      console.error('Error liking profile:', err);
+    }
+  };
+
   return (
     <div className="step-pane">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>Registered Candidates Catalog</h2>
-          <p style={{ color: '#64748b', fontSize: '13.5px', marginTop: '4px' }}>Browse registered profiles and start instant live chats.</p>
+      {/* TOAST ALERT */}
+      {likeToast && (
+        <div className={`swipe-toast-banner ${likeToast.isMatch ? 'match' : 'like'}`}>
+          <Sparkles size={18} />
+          <span>
+            {likeToast.isMatch 
+              ? `🎉 Mutual Match with ${likeToast.name}! Chat unlocked!`
+              : `💖 Liked ${likeToast.name}! Recorded in DB.`
+            }
+          </span>
         </div>
-        <button className="btn-secondary" style={{ padding: '8px 16px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={onRefresh}>
-          <RefreshCw size={13} /> Refresh
-        </button>
-      </div>
+      )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        {candidates.map(cand => (
-          <div key={cand.id} style={{ background: '#ffffff', borderRadius: '24px', border: cand.isRecentlyRegistered ? '2px solid #10b981' : '1px solid #e2e8f0', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-            <div style={{ position: 'relative', height: '190px' }}>
-              <img src={cand.photos[0]} alt={cand.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', top: '12px', right: '12px', background: 'linear-gradient(90deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%)', color: 'white', padding: '4px 12px', borderRadius: '16px', fontWeight: '800', fontSize: '12px', boxShadow: '0 4px 12px rgba(236,72,153,0.3)' }}>
-                {cand.matchScore}% Match
-              </div>
-              {cand.isRecentlyRegistered && (
-                <div style={{ position: 'absolute', top: '12px', left: '12px', background: '#10b981', color: 'white', padding: '4px 12px', borderRadius: '14px', fontWeight: '800', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 4px 10px rgba(16,185,129,0.3)' }}>
-                  <Sparkles size={11} /> NEW
-                </div>
-              )}
-            </div>
-            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0f172a' }}>{cand.name}, {cand.age}</h3>
-                <span style={{ fontSize: '12px', color: '#10b981', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  <MapPin size={12} /> {cand.city}
-                </span>
-              </div>
-              <div style={{ fontSize: '13px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
-                <Briefcase size={13} color="#ea580c" /> {cand.profession} • <Heart size={13} color="#ec4899" /> {cand.relationshipGoal}
-              </div>
-              <p style={{ fontSize: '13px', color: '#475569', lineHeight: '1.4' }}>"{cand.bio}"</p>
-
-              <button className="btn-primary" style={{ marginTop: 'auto', padding: '12px 18px', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => onStartChat(cand)}>
-                <MessageSquare size={15} /> Start Chat
-              </button>
-            </div>
+      {/* TOP HEADER */}
+      <div className="catalog-header-bar">
+        <div>
+          <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>
+            Registered Candidates Catalog
+          </h2>
+          <p style={{ color: '#64748b', fontSize: '13.5px', marginTop: '4px' }}>
+            Browse active database profiles, inspect full background details, or start instant chats.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div className="profiles-counter-badge">
+            <ShieldCheck size={14} /> {candidates.length} DB Candidates
           </div>
-        ))}
+          <button 
+            className="btn-secondary" 
+            style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }} 
+            onClick={onRefresh}
+          >
+            <RefreshCw size={14} className={isLoading ? 'spinner-spin' : ''} /> Refresh DB
+          </button>
+        </div>
       </div>
+
+      {isLoading && candidates.length === 0 ? (
+        <div className="empty-state-pane">
+          <div className="spinner-glow" />
+          <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginTop: '16px' }}>
+            Loading Candidates from Database...
+          </h3>
+        </div>
+      ) : candidates.length === 0 ? (
+        <div className="empty-state-pane">
+          <Sparkles size={40} color="#ec4899" />
+          <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginTop: '12px' }}>
+            No Registered Candidates Found
+          </h3>
+          <p style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>
+            Click Refresh to sync latest registrations from the database.
+          </p>
+        </div>
+      ) : (
+        <div className="catalog-cards-grid">
+          {candidates.map(cand => (
+            <div 
+              key={cand.id} 
+              className="catalog-profile-card"
+              onClick={() => onInspectProfile(cand)}
+            >
+              {/* PHOTO HEADER */}
+              <div className="catalog-card-media">
+                <img 
+                  src={cand.photos[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'} 
+                  alt={cand.name} 
+                  className="catalog-card-img"
+                />
+                <div className="catalog-media-overlay" />
+                
+                {/* MATCH SCORE PILL */}
+                <div className="catalog-match-pill">
+                  <Sparkles size={11} /> {cand.matchScore}% Match
+                </div>
+
+                {cand.isRecentlyRegistered && (
+                  <div className="catalog-new-pill">
+                    <Sparkles size={10} /> RECENT
+                  </div>
+                )}
+
+                <button 
+                  className="catalog-expand-btn" 
+                  onClick={(e) => { e.stopPropagation(); onInspectProfile(cand); }}
+                  title="Inspect Full Profile Details"
+                >
+                  <Maximize2 size={14} /> Full Details
+                </button>
+              </div>
+
+              {/* CARD DETAILS BODY */}
+              <div className="catalog-card-content">
+                <div className="catalog-name-row">
+                  <h3 className="catalog-candidate-name">
+                    {cand.name}, {cand.age}
+                  </h3>
+                  <span className="catalog-location-tag">
+                    <MapPin size={12} color="#ec4899" /> {cand.city}
+                  </span>
+                </div>
+
+                <div className="catalog-subinfo-row">
+                  <span className="catalog-subinfo-item">
+                    <Briefcase size={13} color="#f97316" /> {cand.profession}
+                  </span>
+                  {cand.education && (
+                    <>
+                      <span>•</span>
+                      <span className="catalog-subinfo-item">
+                        <GraduationCap size={13} color="#8b5cf6" /> {cand.education}
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                {cand.bio && (
+                  <p className="catalog-bio-snippet">"{cand.bio}"</p>
+                )}
+
+                {/* TAGS ROW */}
+                <div className="catalog-tags-row">
+                  {cand.interests?.slice(0, 3).map(int => (
+                    <span key={int} className="catalog-tag">#{int}</span>
+                  ))}
+                  {cand.languages?.slice(0, 2).map(l => (
+                    <span key={l} className="catalog-tag lang">{l}</span>
+                  ))}
+                </div>
+
+                {/* BOTTOM ACTIONS */}
+                <div className="catalog-card-actions">
+                  <button 
+                    className={`btn-catalog-like ${likedMap[cand.id] ? 'liked' : ''}`}
+                    onClick={(e) => handleLike(cand, e)}
+                    title="Send Like / Right Swipe"
+                  >
+                    <Heart size={16} fill={likedMap[cand.id] ? '#ffffff' : 'transparent'} /> 
+                    {likedMap[cand.id] ? 'Liked' : 'Like'}
+                  </button>
+
+                  <button 
+                    className="btn-catalog-chat" 
+                    onClick={(e) => { e.stopPropagation(); onStartChat(cand); }}
+                    title="Start Live Chat"
+                  >
+                    <MessageSquare size={16} /> Chat
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

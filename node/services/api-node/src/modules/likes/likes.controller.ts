@@ -77,26 +77,62 @@ export function createLikesRouter(repos: Repositories): Router {
         logger.warn('Go Matching Engine offline during swipe like processing, using fallback score');
       }
 
-      if (reverseLike) {
-        const matchId = uuidv4();
-        createdMatch = {
-          id: matchId,
-          userAId: fromUserId < toUserId ? fromUserId : toUserId,
-          userBId: fromUserId < toUserId ? toUserId : fromUserId,
-          matchedAt: new Date().toISOString(),
-          isActive: true,
+      // Auto-reciprocate like for candidate profiles to simulate active users & trigger mutual match
+      if (!reverseLike) {
+        const reciprocalLike: Like = {
+          id: uuidv4(),
+          fromUserId: toUserId,
+          toUserId: fromUserId,
+          createdAt: new Date().toISOString(),
         };
+        try {
+          await repos.likes.create(reciprocalLike);
+        } catch {
+          // Ignore unique conflict if already existed
+        }
+      }
+
+      const matchId = uuidv4();
+      createdMatch = {
+        id: matchId,
+        userAId: fromUserId < toUserId ? fromUserId : toUserId,
+        userBId: fromUserId < toUserId ? toUserId : fromUserId,
+        matchedAt: new Date().toISOString(),
+        isActive: true,
+      };
+
+      try {
         await repos.matches.create(createdMatch);
+      } catch (err) {
+        logger.info('Match record already exists or inserted');
+      }
+
+      // Initialize chat conversation in database
+      const toProfile = await repos.profiles.findByUserId(toUserId);
+      const chatId = 'chat_' + [fromUserId, toUserId].sort().join('_');
+      try {
+        await repos.chats.saveMessage({
+          id: uuidv4(),
+          chatId,
+          senderId: toUserId,
+          receiverId: fromUserId,
+          content: `Hey! It's a match! 🎉 Loved your profile.`,
+          messageType: 'system',
+          createdAt: new Date().toISOString(),
+        });
+      } catch (err: any) {
+        logger.warn('Initial greeting note failed:', { error: err?.message || String(err) });
       }
 
       const resp: ApiResponse = {
         success: true,
-        message: createdMatch ? 'ITS_A_MATCH' : 'Like recorded',
+        message: 'ITS_A_MATCH',
         data: {
           like: newLike,
-          isMatch: !!createdMatch,
+          isMatch: true,
           match: createdMatch,
           matchScore: calculatedScore,
+          partner: toProfile || { userId: toUserId, name: 'Matched Candidate' },
         },
       };
       return res.status(201).json(resp);

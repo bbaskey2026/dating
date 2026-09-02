@@ -1,5 +1,431 @@
 [
   {
+    "id": "d69c8a5b-5850-6cc0-c880-1cdf81de5cac",
+    "email": "admin@topolgira.com",
+    "passwordHash": "hashed_admin123",
+    "phoneNumber": "+919999900000",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "de9204c4-1f2e-9648-1f8a-a60934f70f06",
+      "userId": "d69c8a5b-5850-6cc0-c880-1cdf81de5cac",
+      "name": "admin",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": null,
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T23:06:57+05:30",
+      "updatedAt": "2026-08-30T23:06:57+05:30"
+    },
+    "createdAt": "2026-08-30T23:06:57+05:30",
+    "updatedAt": "2026-08-30T23:06:57+05:30"
+  },
+  {
+    "id": "76709147-fc0c-f8a3-327b-803bd860886e",
+    "email": "bhima@topolgira.com",
+    "passwordHash": "hashed_user123",
+    "phoneNumber": "+919999911111",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "7f76e006-6ad2-9af4-25b9-6207e4139061",
+      "userId": "76709147-fc0c-f8a3-327b-803bd860886e",
+      "name": "bhima",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": null,
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T23:06:57+05:30",
+      "updatedAt": "2026-08-30T23:06:57+05:30"
+    },
+    "createdAt": "2026-08-30T23:06:57+05:30",
+    "updatedAt": "2026-08-30T23:06:57+05:30"
+  },
+  {
+    "id": "1dec3fe6-dd83-96f7-915c-3e6669137c04",
+    "email": "ankitatudu@topolgira.com",
+    "passwordHash": "hashed_password123",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "5a28c771-9cf6-9e45-454f-daacbd13642f",
+      "userId": "1dec3fe6-dd83-96f7-915c-3e6669137c04",
+      "name": "Ankita Tudu",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T23:20:59+05:30",
+      "updatedAt": "2026-08-30T23:20:59+05:30"
+    },
+    "createdAt": "2026-08-30T23:20:59+05:30",
+    "updatedAt": "2026-08-30T23:20:59+05:30"
+  },
+  {
+    "id": "494e195f-953a-2bab-48f2-e26b8f8429ca",
+    "email": "di_user_POSTGRES_1788079601159216500@example.com",
+    "passwordHash": "hashed_secret123",
+    "phoneNumber": "+919876543210",
+    "role": "user",
+    "status": "deactivated",
+    "isVerified": false,
+    "profile": {
+      "id": "6b8e1a85-e08b-61f8-3431-fa1c46fdf316",
+      "userId": "494e195f-953a-2bab-48f2-e26b8f8429ca",
+      "name": "DI Test User",
+      "age": 28,
+      "gender": "female",
+      "city": "Dhanbad",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "Testing DI",
+      "interests": [
+        "Music",
+        "Travel"
+      ],
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T14:16:41+05:30",
+      "updatedAt": "2026-08-30T14:16:41+05:30"
+    },
+    "createdAt": "2026-08-30T14:16:41+05:30",
+    "updatedAt": "2026-08-30T14:16:41+05:30"
+  },
+  {
+    "id": "70ad99b1-f9ea-bdf4-9aed-0046ce66a017",
+    "email": "ankita@topolgira.com",
+    "passwordHash": "hashed_password123",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "2a9ec62a-4b55-e226-ebcd-f0e94ca47e89",
+      "userId": "70ad99b1-f9ea-bdf4-9aed-0046ce66a017",
+      "name": "Bhima Baskey",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T23:19:18+05:30",
+      "updatedAt": "2026-08-30T23:19:18+05:30"
+    },
+    "createdAt": "2026-08-30T23:19:18+05:30",
+    "updatedAt": "2026-08-30T23:19:18+05:30"
+  },
+  {
+    "id": "adc12719-67d7-ac2b-ee4e-a11d339d03d4",
+    "email": "nadu@topolgira.com",
+    "passwordHash": "hashed_password123",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "4e8916eb-f628-9940-3419-c76f8459682a",
+      "userId": "adc12719-67d7-ac2b-ee4e-a11d339d03d4",
+      "name": "Nadu Baskey",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-31T07:59:08+05:30",
+      "updatedAt": "2026-08-31T07:59:08+05:30"
+    },
+    "createdAt": "2026-08-31T07:59:08+05:30",
+    "updatedAt": "2026-08-31T07:59:08+05:30"
+  },
+  {
+    "id": "9dabb9e1-0a19-2c63-df3e-aa5670279f24",
+    "email": "Nikita@topolgira.com",
+    "passwordHash": "hashed_password123",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "b4d9bd88-c865-4c35-8431-ba847b0ad4c7",
+      "userId": "9dabb9e1-0a19-2c63-df3e-aa5670279f24",
+      "name": "Nikita Baskey",
+      "age": 20,
+      "gender": "male",
+      "city": "Odisha",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Odisha",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar",
+        "Dancing",
+        "Blogging",
+        "Reading",
+        "Cycling"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T23:25:39+05:30",
+      "updatedAt": "2026-08-30T23:25:39+05:30"
+    },
+    "createdAt": "2026-08-30T23:25:39+05:30",
+    "updatedAt": "2026-08-30T23:25:39+05:30"
+  },
+  {
     "id": "4cd83a74-999c-de5b-c299-d37368218a32",
     "email": "di_user_POSTGRES_1788076063447419100@example.com",
     "passwordHash": "hashed_secret123",
@@ -102,57 +528,5 @@
     },
     "createdAt": "2026-08-30T12:48:53+05:30",
     "updatedAt": "2026-08-30T12:48:53+05:30"
-  },
-  {
-    "id": "494e195f-953a-2bab-48f2-e26b8f8429ca",
-    "email": "di_user_POSTGRES_1788079601159216500@example.com",
-    "passwordHash": "hashed_secret123",
-    "phoneNumber": "+919876543210",
-    "role": "user",
-    "status": "deactivated",
-    "isVerified": false,
-    "profile": {
-      "id": "6b8e1a85-e08b-61f8-3431-fa1c46fdf316",
-      "userId": "494e195f-953a-2bab-48f2-e26b8f8429ca",
-      "name": "DI Test User",
-      "age": 28,
-      "gender": "female",
-      "city": "Dhanbad",
-      "location": {
-        "latitude": 23.3441,
-        "longitude": 85.3096,
-        "city": "Ranchi",
-        "country": "India"
-      },
-      "education": "",
-      "profession": "",
-      "relationshipGoal": "marriage",
-      "bio": "Testing DI",
-      "interests": [
-        "Music",
-        "Travel"
-      ],
-      "languages": null,
-      "hobbies": null,
-      "foodPreferences": null,
-      "musicInterests": null,
-      "photos": null,
-      "preferences": {
-        "minAge": 18,
-        "maxAge": 60,
-        "maxDistanceKm": 50,
-        "preferredGenders": [
-          "female",
-          "male"
-        ],
-        "relationshipGoals": [
-          "marriage"
-        ]
-      },
-      "createdAt": "2026-08-30T14:16:41+05:30",
-      "updatedAt": "2026-08-30T14:16:41+05:30"
-    },
-    "createdAt": "2026-08-30T14:16:41+05:30",
-    "updatedAt": "2026-08-30T14:16:41+05:30"
   }
 ]

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import type { Candidate } from '../services/api';
+import { useNotifications } from '../context/NotificationContext';
+import type { Candidate } from '../api';
+import { ChatsService } from '../api';
 import { 
   ArrowLeft, 
   Send, 
@@ -9,25 +11,28 @@ import {
   Search, 
   Phone, 
   Video, 
-  MoreVertical, 
   Paperclip, 
   Smile, 
   MessageSquare,
-  CheckCheck
+  CheckCheck,
+  Maximize2
 } from 'lucide-react';
 
 interface ChatPageProps {
-  selectedCandidate?: Candidate;
+  selectedCandidate?: Candidate | null;
   candidates?: Candidate[];
   onSelectCandidate?: (cand: Candidate) => void;
+  onInspectProfile?: (cand: Candidate) => void;
 }
 
 export const ChatPage: React.FC<ChatPageProps> = ({ 
   selectedCandidate, 
   candidates = [], 
-  onSelectCandidate 
+  onSelectCandidate,
+  onInspectProfile
 }) => {
   const { user } = useAuth();
+  const { markConversationRead, wsConnected, sendWebSocketEvent, subscribeToMessages } = useNotifications();
   const navigate = useNavigate();
 
   // Active contact selection
@@ -51,15 +56,10 @@ export const ChatPage: React.FC<ChatPageProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
 
   // Per-contact chat messages history
-  const [chatStore, setChatStore] = useState<Record<string, Array<{ sender: string; text: string; time: string }>>>({
-    [activeContact.id]: [
-      { sender: 'them', text: `Hey ${user?.name || 'there'}! Loved your profile. How is your day going? 😊`, time: '10:14 AM' },
-    ]
-  });
+  const [chatStore, setChatStore] = useState<Record<string, Array<{ sender: string; text: string; time: string }>>>({});
 
   const [chatInput, setChatInput] = useState('');
-  const [wsConnected, setWsConnected] = useState(false);
-  const wsRef = useRef<WebSocket | null>(null);
+  const [isTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Synchronize when parent updates selectedCandidate
@@ -69,80 +69,110 @@ export const ChatPage: React.FC<ChatPageProps> = ({
     }
   }, [selectedCandidate]);
 
+  // Mark conversation read on contact select
+  useEffect(() => {
+    if (activeContact?.id) {
+      markConversationRead(activeContact.id);
+    }
+  }, [activeContact?.id, markConversationRead]);
+
   // Scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatStore, activeContact]);
 
-  // WebSocket Connection
-  useEffect(() => {
-    if (user) {
-      const ws = new WebSocket('ws://localhost:9000/ws');
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        setWsConnected(true);
-        ws.send(JSON.stringify({ type: 'auth', senderId: user.id }));
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'message' && data.senderId !== user.id) {
-            const senderId = data.senderId;
-            setChatStore(prev => ({
-              ...prev,
-              [senderId]: [
-                ...(prev[senderId] || []),
-                {
-                  sender: senderId,
-                  text: data.content,
-                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                }
-              ]
-            }));
-          }
-        } catch (e) {
-          console.error('Error parsing WS message', e);
-        }
-      };
-
-      ws.onclose = () => setWsConnected(false);
-
-      return () => {
-        ws.close();
-      };
+  // Fetch message history from REST backend for active contact
+  const fetchMessagesForContact = useCallback(async (contactId: string) => {
+    if (!contactId || contactId === 'default' || !user?.id) return;
+    try {
+      const res = await ChatsService.getChatHistory(contactId);
+      if (res?.success && Array.isArray(res.data)) {
+        const formatted = res.data.map((m: any) => ({
+          sender: m.senderId === user.id ? 'me' : 'them',
+          text: m.content,
+          time: new Date(m.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }));
+        setChatStore(prev => ({
+          ...prev,
+          [contactId]: formatted,
+        }));
+      }
+    } catch (err) {
+      console.warn('Could not load chat history from server', err);
     }
-  }, [user]);
+  }, [user?.id]);
 
-  const sendChatMessage = (customText?: string) => {
+  // Poll backend for consistency between users
+  useEffect(() => {
+    if (activeContact?.id && activeContact.id !== 'default') {
+      fetchMessagesForContact(activeContact.id);
+    }
+    const interval = setInterval(() => {
+      if (activeContact?.id && activeContact.id !== 'default') {
+        fetchMessagesForContact(activeContact.id);
+      }
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [activeContact?.id, fetchMessagesForContact]);
+
+  // Subscribe to real-time incoming messages via global NotificationContext
+  useEffect(() => {
+    const unsubscribe = subscribeToMessages((data: any) => {
+      if (data.type === 'message' && data.senderId && data.senderId !== user?.id) {
+        const partnerId = data.senderId;
+        const newIncomingMsg = {
+          sender: 'them',
+          text: data.content,
+          time: new Date(data.timestamp ? data.timestamp * 1000 : Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        };
+        setChatStore(prev => ({
+          ...prev,
+          [partnerId]: [...(prev[partnerId] || []), newIncomingMsg]
+        }));
+      }
+    });
+    return unsubscribe;
+  }, [subscribeToMessages, user?.id]);
+
+  const sendChatMessage = async (customText?: string) => {
     const textToSend = customText || chatInput.trim();
     if (!textToSend || !user) return;
 
-    if (wsRef.current && wsConnected) {
-      const payload = {
-        type: 'message',
-        chatId: 'chat_' + [user.id, activeContact.id].sort().join('_'),
-        senderId: user.id,
-        receiverId: activeContact.id,
-        content: textToSend,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
-      wsRef.current.send(JSON.stringify(payload));
-    }
+    const contactId = activeContact.id;
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+    // Optimistic UI update
     const newMsg = {
       sender: 'me',
       text: textToSend,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      time: timeStr,
     };
 
     setChatStore(prev => ({
       ...prev,
-      [activeContact.id]: [...(prev[activeContact.id] || []), newMsg]
+      [contactId]: [...(prev[contactId] || []), newMsg]
     }));
 
     setChatInput('');
+
+    // 1. Send live via shared WebSocket
+    sendWebSocketEvent({
+      type: 'message',
+      chatId: 'chat_' + [user.id, contactId].sort().join('_'),
+      senderId: user.id,
+      receiverId: contactId,
+      content: textToSend,
+      timestamp: Math.floor(Date.now() / 1000),
+    });
+
+    // 2. Persist to Node.js backend database
+    if (contactId !== 'default') {
+      try {
+        await ChatsService.sendMessage(contactId, textToSend);
+      } catch (err) {
+        console.error('Failed to persist chat message to API:', err);
+      }
+    }
   };
 
   const handleSelectContact = (cand: Candidate) => {
@@ -315,14 +345,21 @@ export const ChatPage: React.FC<ChatPageProps> = ({
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {onInspectProfile && (
+              <button 
+                className="btn-secondary" 
+                style={{ padding: '8px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '6px', color: '#ec4899', borderColor: '#fbcfe8', background: '#fdf2f8' }} 
+                title="View Full Profile"
+                onClick={() => onInspectProfile(activeContact)}
+              >
+                <Maximize2 size={14} /> Full Profile
+              </button>
+            )}
             <button className="btn-secondary" style={{ padding: '8px 12px', borderRadius: '12px' }} title="Voice Call">
               <Phone size={16} color="#64748b" />
             </button>
             <button className="btn-secondary" style={{ padding: '8px 12px', borderRadius: '12px' }} title="Video Call">
               <Video size={16} color="#64748b" />
-            </button>
-            <button className="btn-secondary" style={{ padding: '8px 12px', borderRadius: '12px' }} title="Options">
-              <MoreVertical size={16} color="#64748b" />
             </button>
             <button className="btn-secondary" style={{ padding: '8px 16px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: '12px' }} onClick={() => navigate('/swipe')}>
               <ArrowLeft size={14} /> Back
@@ -363,6 +400,12 @@ export const ChatPage: React.FC<ChatPageProps> = ({
                 </div>
               </div>
             ))
+          )}
+          {isTyping && (
+            <div className="chat-bubble them" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', width: 'fit-content' }}>
+              <span style={{ fontSize: '12px', color: '#64748b' }}>{activeContact.name} is typing</span>
+              <span className="dot-flashing" style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', background: '#ec4899' }}></span>
+            </div>
           )}
           <div ref={messagesEndRef} />
         </div>

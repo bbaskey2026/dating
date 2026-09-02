@@ -22,16 +22,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('topolgira_user');
+    const saved = sessionStorage.getItem('topolgira_user');
     return saved ? JSON.parse(saved) : null;
   });
 
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('topolgira_token') || null;
+    return sessionStorage.getItem('topolgira_token') || null;
   });
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const saveSession = (u: User, t: string) => {
+    setUser(u);
+    setToken(t);
+    sessionStorage.setItem('topolgira_user', JSON.stringify(u));
+    sessionStorage.setItem('topolgira_token', t);
+    localStorage.removeItem('topolgira_user');
+    localStorage.removeItem('topolgira_token');
+    localStorage.removeItem('token');
+  };
 
   const login = async (email: string, pass: string): Promise<boolean> => {
     setLoading(true);
@@ -41,10 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.success) {
         const u = res.data.user;
         const t = res.data.accessToken;
-        setUser(u);
-        setToken(t);
-        localStorage.setItem('topolgira_user', JSON.stringify(u));
-        localStorage.setItem('topolgira_token', t);
+        saveSession(u, t);
         setLoading(false);
         return true;
       } else {
@@ -54,10 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const demoId = 'user_demo_' + Math.random().toString(36).substring(2, 7);
       const demoUser = { id: demoId, email, name: email.split('@')[0] };
       const demoToken = 'demo_token_' + demoId;
-      setUser(demoUser);
-      setToken(demoToken);
-      localStorage.setItem('topolgira_user', JSON.stringify(demoUser));
-      localStorage.setItem('topolgira_token', demoToken);
+      saveSession(demoUser, demoToken);
       setLoading(false);
       return true;
     }
@@ -73,10 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.success) {
         const u = res.data.user;
         const t = res.data.accessToken;
-        setUser(u);
-        setToken(t);
-        localStorage.setItem('topolgira_user', JSON.stringify(u));
-        localStorage.setItem('topolgira_token', t);
+        saveSession(u, t);
         setLoading(false);
         return true;
       } else {
@@ -86,10 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const demoId = 'user_reg_' + Math.random().toString(36).substring(2, 7);
       const demoUser = { id: demoId, email: payload.email, name: payload.name };
       const demoToken = 'demo_token_' + demoId;
-      setUser(demoUser);
-      setToken(demoToken);
-      localStorage.setItem('topolgira_user', JSON.stringify(demoUser));
-      localStorage.setItem('topolgira_token', demoToken);
+      saveSession(demoUser, demoToken);
       setLoading(false);
       return true;
     }
@@ -103,6 +101,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     setUser(null);
     setToken(null);
+    sessionStorage.removeItem('topolgira_user');
+    sessionStorage.removeItem('topolgira_token');
     localStorage.removeItem('topolgira_user');
     localStorage.removeItem('topolgira_token');
   };

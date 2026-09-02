@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import { UserProfile, Like, Match } from '@topolgira/shared-types';
-import { UserRecord, IUserRepository, IProfileRepository, ILikeRepository, IMatchRepository, Repositories } from '../interfaces';
+import { UserRecord, IUserRepository, IProfileRepository, ILikeRepository, IMatchRepository, IChatRepository, ChatMessageRecord, Repositories } from '../interfaces';
 
 export class PostgresUserRepository implements IUserRepository {
   constructor(private pool: Pool) {}
@@ -47,13 +47,13 @@ export class PostgresProfileRepository implements IProfileRepository {
     await this.pool.query(
       `INSERT INTO profiles (
         id, user_id, name, age, gender, city, latitude, longitude, education, profession, relationship_goal, bio,
-        interests, languages, hobbies, food_preferences, music_interests, min_age_pref, max_age_pref, max_distance_km, preferred_genders, relationship_goals_pref
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)`,
+        interests, languages, hobbies, food_preferences, music_interests, photos, min_age_pref, max_age_pref, max_distance_km, preferred_genders, relationship_goals_pref
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
       [
         profile.id, profile.userId, profile.name, profile.age, profile.gender, profile.city,
         profile.location.latitude, profile.location.longitude, profile.education, profile.profession,
         profile.relationshipGoal, profile.bio, profile.interests, profile.languages, profile.hobbies,
-        profile.foodPreferences, profile.musicInterests, profile.preferences.minAge, profile.preferences.maxAge,
+        profile.foodPreferences, profile.musicInterests, profile.photos || [], profile.preferences.minAge, profile.preferences.maxAge,
         profile.preferences.maxDistanceKm, profile.preferences.preferredGenders, profile.preferences.relationshipGoals
       ]
     );
@@ -69,13 +69,13 @@ export class PostgresProfileRepository implements IProfileRepository {
       `UPDATE profiles SET
         name = $1, age = $2, gender = $3, city = $4, latitude = $5, longitude = $6, education = $7, profession = $8,
         relationship_goal = $9, bio = $10, interests = $11, languages = $12, hobbies = $13, food_preferences = $14,
-        music_interests = $15, min_age_pref = $16, max_age_pref = $17, max_distance_km = $18, preferred_genders = $19,
-        relationship_goals_pref = $20, updated_at = $21
-      WHERE user_id = $22`,
+        music_interests = $15, photos = $16, min_age_pref = $17, max_age_pref = $18, max_distance_km = $19, preferred_genders = $20,
+        relationship_goals_pref = $21, updated_at = $22
+      WHERE user_id = $23`,
       [
         merged.name, merged.age, merged.gender, merged.city, merged.location.latitude, merged.location.longitude,
         merged.education, merged.profession, merged.relationshipGoal, merged.bio, merged.interests, merged.languages,
-        merged.hobbies, merged.foodPreferences, merged.musicInterests, merged.preferences.minAge, merged.preferences.maxAge,
+        merged.hobbies, merged.foodPreferences, merged.musicInterests, merged.photos || [], merged.preferences.minAge, merged.preferences.maxAge,
         merged.preferences.maxDistanceKm, merged.preferences.preferredGenders, merged.preferences.relationshipGoals,
         merged.updatedAt, userId
       ]
@@ -106,7 +106,7 @@ export class PostgresProfileRepository implements IProfileRepository {
       hobbies: row.hobbies || [],
       foodPreferences: row.food_preferences || [],
       musicInterests: row.music_interests || [],
-      photos: [],
+      photos: row.photos || [],
       preferences: {
         minAge: row.min_age_pref || 18,
         maxAge: row.max_age_pref || 60,
@@ -173,14 +173,68 @@ export class PostgresMatchRepository implements IMatchRepository {
   }
 }
 
+export class PostgresChatRepository implements IChatRepository {
+  constructor(private pool: Pool) {}
+
+  async saveMessage(msg: ChatMessageRecord): Promise<ChatMessageRecord> {
+    const sentTimestamp = Math.floor(new Date(msg.createdAt || Date.now()).getTime() / 1000);
+    await this.pool.query(
+      `INSERT INTO chat_messages (id, chat_id, sender_id, receiver_id, message_type, content, sent_timestamp, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       ON CONFLICT (id) DO NOTHING`,
+      [msg.id, msg.chatId, msg.senderId, msg.receiverId, msg.messageType || 'message', msg.content, sentTimestamp, msg.createdAt || new Date().toISOString()]
+    );
+
+    const userA = msg.senderId < msg.receiverId ? msg.senderId : msg.receiverId;
+    const userB = msg.senderId < msg.receiverId ? msg.receiverId : msg.senderId;
+
+    await this.pool.query(
+      `INSERT INTO chat_conversations (id, user_a_id, user_b_id, last_message_text, last_message_at)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (user_a_id, user_b_id) DO UPDATE SET
+         last_message_text = EXCLUDED.last_message_text,
+         last_message_at = EXCLUDED.last_message_at`,
+      [msg.chatId, userA, userB, msg.content, msg.createdAt]
+    );
+
+    return msg;
+  }
+
+  async getMessages(userAId: string, userBId: string, limit: number = 50): Promise<ChatMessageRecord[]> {
+    const res = await this.pool.query(
+      `SELECT id, chat_id as "chatId", sender_id as "senderId", receiver_id as "receiverId",
+              message_type as "messageType", content, created_at as "createdAt"
+       FROM chat_messages
+       WHERE (sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 AND receiver_id = $1)
+       ORDER BY created_at ASC
+       LIMIT $3`,
+      [userAId, userBId, limit]
+    );
+    return res.rows;
+  }
+
+  async getRecentConversations(userId: string): Promise<any[]> {
+    const res = await this.pool.query(
+      `SELECT id, user_a_id as "userAId", user_b_id as "userBId",
+              last_message_text as "lastMessageText", last_message_at as "lastMessageAt"
+       FROM chat_conversations
+       WHERE user_a_id = $1 OR user_b_id = $1
+       ORDER BY last_message_at DESC`,
+      [userId]
+    );
+    return res.rows;
+  }
+}
+
 export function createPostgresRepositories(connectionString?: string): Repositories {
   const pool = new Pool({
-    connectionString: connectionString || process.env.DATABASE_URL || 'postgres://topolgira_user:topolgira_password@localhost:5432/topolgira',
+    connectionString: connectionString || process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/topolgira',
   });
   return {
     users: new PostgresUserRepository(pool),
     profiles: new PostgresProfileRepository(pool),
     likes: new PostgresLikeRepository(pool),
     matches: new PostgresMatchRepository(pool),
+    chats: new PostgresChatRepository(pool),
   };
 }

@@ -30,9 +30,26 @@ export interface IMatchRepository {
   findById(id: string): Promise<Match | null>;
 }
 
+export interface ChatMessageRecord {
+  id: string;
+  chatId: string;
+  senderId: string;
+  receiverId: string;
+  messageType?: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface IChatRepository {
+  saveMessage(msg: ChatMessageRecord): Promise<ChatMessageRecord>;
+  getMessages(userAId: string, userBId: string, limit?: number): Promise<ChatMessageRecord[]>;
+  getRecentConversations(userId: string): Promise<any[]>;
+}
+
 export interface Repositories {
   users: IUserRepository;
   profiles: IProfileRepository;
   likes: ILikeRepository;
   matches: IMatchRepository;
+  chats: IChatRepository;
 }

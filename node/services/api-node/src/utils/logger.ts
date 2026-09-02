@@ -9,7 +9,18 @@ export interface LogContext {
  */
 function safeSerialize(data: any): any {
   if (data === undefined || data === null) return data;
-  if (typeof data !== 'object') return data;
+  if (data instanceof Error) {
+    const errObj: Record<string, any> = {
+      name: data.name,
+      message: data.message,
+      stack: data.stack,
+    };
+    for (const key of Object.keys(data)) {
+      errObj[key] = (data as any)[key];
+    }
+    return errObj;
+  }
+  if (typeof data !== 'object') return { value: data };
 
   // Don't serialize raw Express Request/Response/Socket objects
   if (data.writableEnded !== undefined || data._header !== undefined || data.socket !== undefined) {
@@ -36,7 +47,7 @@ function safeSerialize(data: any): any {
 }
 
 export class Logger {
-  private format(level: LogLevel, message: string, context?: LogContext): string {
+  private format(level: LogLevel, message: string, context?: any): string {
     const timestamp = new Date().toISOString();
     const env = process.env.NODE_ENV || 'development';
     const safeContext = safeSerialize(context);
@@ -63,19 +74,19 @@ export class Logger {
     }
   }
 
-  info(message: string, context?: LogContext) {
+  info(message: string, context?: any) {
     console.log(this.format('info', message, context));
   }
 
-  warn(message: string, context?: LogContext) {
+  warn(message: string, context?: any) {
     console.warn(this.format('warn', message, context));
   }
 
-  error(message: string, context?: LogContext) {
+  error(message: string, context?: any) {
     console.error(this.format('error', message, context));
   }
 
-  debug(message: string, context?: LogContext) {
+  debug(message: string, context?: any) {
     if (process.env.LOG_LEVEL === 'debug' || process.env.NODE_ENV !== 'production') {
       console.debug(this.format('debug', message, context));
     }

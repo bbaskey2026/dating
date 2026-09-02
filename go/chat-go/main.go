@@ -193,8 +193,8 @@ func (cs *ChatServer) handleWS(ws *websocket.Conn) {
 
 func (cs *ChatServer) handleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Client-Version, X-Request-Id, X-Requested-With, Accept, Origin")
 	if r.Method == http.MethodOptions {
 		w.WriteHeader(http.StatusOK)
 		return
@@ -214,7 +214,7 @@ func (cs *ChatServer) handleHealth(w http.ResponseWriter, r *http.Request) {
 func getDriver() string {
 	d := os.Getenv("DB_DRIVER")
 	if d == "" {
-		d = "json"
+		d = "postgres"
 	}
 	return d
 }
@@ -249,9 +249,16 @@ func main() {
 	}
 
 	driver := getDriver()
-	dbConfig := os.Getenv("REDIS_URL")
-	if driver == "json" && dbConfig == "" {
-		dbConfig = "chat_messages.json"
+	dbConfig := os.Getenv("DATABASE_URL")
+	if dbConfig == "" {
+		dbConfig = os.Getenv("REDIS_URL")
+	}
+	if dbConfig == "" {
+		if driver == "postgres" {
+			dbConfig = "postgres://postgres:postgres@localhost:5432/topolgira"
+		} else {
+			dbConfig = "chat_messages.json"
+		}
 	}
 
 	// Dependency Injection Manual Wiring

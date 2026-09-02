@@ -25,12 +25,19 @@ export interface Candidate {
   gender: string;
   city: string;
   profession: string;
+  education?: string;
   relationshipGoal: string;
   bio: string;
   matchScore: number;
   interests: string[];
+  languages?: string[];
+  hobbies?: string[];
+  foodPreferences?: string[];
+  musicInterests?: string[];
   photos: string[];
   isRecentlyRegistered?: boolean;
+  verified?: boolean;
+  onlineStatus?: 'online' | 'active_recently' | 'offline';
 }
 
 export interface User {

@@ -1,133 +1,237 @@
 import React, { useState } from 'react';
 import type { Candidate } from '../api';
 import { MatchesService } from '../api';
-import { X, Heart, MessageSquare, MapPin, Briefcase, Sparkles } from 'lucide-react';
+import { 
+  X, 
+  Heart, 
+  MessageSquare, 
+  MapPin, 
+  Briefcase, 
+  Sparkles, 
+  Maximize2, 
+  GraduationCap, 
+  Globe, 
+  ShieldCheck 
+} from 'lucide-react';
 
 interface SwipePageProps {
   candidates: Candidate[];
+  isLoading?: boolean;
   onStartChat: (cand: Candidate) => void;
+  onInspectProfile: (cand: Candidate) => void;
+  onMatchTriggered: (cand: Candidate) => void;
 }
 
-export const SwipePage: React.FC<SwipePageProps> = ({ candidates, onStartChat }) => {
+export const SwipePage: React.FC<SwipePageProps> = ({ 
+  candidates, 
+  isLoading = false,
+  onStartChat, 
+  onInspectProfile,
+  onMatchTriggered
+}) => {
   const [currentSwipeIndex, setCurrentSwipeIndex] = useState(0);
   const [swipeAnimation, setSwipeAnimation] = useState<'left' | 'right' | null>(null);
-  const [matchBanner, setMatchBanner] = useState<string | null>(null);
+  const [likeToast, setLikeToast] = useState<{ name: string; isMatch: boolean } | null>(null);
 
   const activeCandidate = candidates[currentSwipeIndex] || candidates[0];
 
   const handleSwipe = async (direction: 'left' | 'right') => {
+    if (!activeCandidate) return;
     setSwipeAnimation(direction);
-    if (direction === 'right' && activeCandidate) {
+
+    if (direction === 'right') {
       try {
-        const token = localStorage.getItem('token') || '';
-        const res = await MatchesService.sendLike(activeCandidate.id, token);
+        const res = await MatchesService.sendLike(activeCandidate.id);
         if (res?.message === 'ITS_A_MATCH' || res?.data?.isMatch) {
-          setMatchBanner(`🎉 It's a Mutual Match with ${activeCandidate.name}!`);
-          setTimeout(() => setMatchBanner(null), 4000);
+          onMatchTriggered(activeCandidate);
+          setLikeToast({ name: activeCandidate.name, isMatch: true });
+        } else {
+          setLikeToast({ name: activeCandidate.name, isMatch: false });
         }
+        setTimeout(() => setLikeToast(null), 3500);
       } catch (e) {
-        // Fallback for offline mode
+        console.error('Error swiping right:', e);
       }
     }
 
     setTimeout(() => {
       setSwipeAnimation(null);
       setCurrentSwipeIndex(prev => (prev + 1) % (candidates.length || 1));
-    }, 300);
+    }, 280);
   };
 
-  if (!activeCandidate) {
-    return <div style={{ color: '#94a3b8', padding: '24px' }}>Loading candidate deck...</div>;
+  if (isLoading && candidates.length === 0) {
+    return (
+      <div className="empty-state-pane">
+        <div className="spinner-glow" />
+        <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginTop: '16px' }}>
+          Loading Profiles from Database...
+        </h3>
+        <p style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>
+          Fetching active user profiles & compatibility scores
+        </p>
+      </div>
+    );
+  }
+
+  if (candidates.length === 0) {
+    return (
+      <div className="empty-state-pane">
+        <Sparkles size={48} color="#ec4899" />
+        <h3 style={{ fontSize: '22px', fontWeight: 900, color: '#0f172a', marginTop: '16px' }}>
+          No More Profiles In Your Area
+        </h3>
+        <p style={{ color: '#64748b', fontSize: '14px', marginTop: '6px', maxWidth: '400px' }}>
+          You've explored all currently available registered profiles in the database. Check back soon for new registrations!
+        </p>
+      </div>
+    );
   }
 
   return (
     <div className="swipe-deck-container">
-      {matchBanner && (
-        <div style={{ background: 'linear-gradient(90deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%)', color: '#ffffff', padding: '12px 24px', borderRadius: '16px', fontWeight: '800', fontSize: '14px', textAlign: 'center', boxShadow: '0 8px 24px rgba(236,72,153,0.35)', margin: '0 36px 12px 36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-          <Sparkles size={18} /> {matchBanner}
+      {/* LIKE / MATCH TOAST NOTIFICATION */}
+      {likeToast && (
+        <div className={`swipe-toast-banner ${likeToast.isMatch ? 'match' : 'like'}`}>
+          <Sparkles size={18} />
+          <span>
+            {likeToast.isMatch 
+              ? `🎉 It's a Mutual Match with ${likeToast.name}! Chat unlocked!`
+              : `💖 You liked ${likeToast.name}! Like recorded in DB.`
+            }
+          </span>
         </div>
       )}
 
-      <div style={{ width: '100%', padding: '24px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ textAlign: 'left' }}>
+      {/* TOP HEADER STATUS BAR */}
+      <div className="swipe-top-bar">
+        <div>
           <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>Explore Registered Profiles</h2>
-          <p style={{ color: '#64748b', fontSize: '13.5px', marginTop: '2px' }}>Swipe left to Pass, right to Like, or click Chat to connect instantly.</p>
+          <p style={{ color: '#64748b', fontSize: '13.5px', marginTop: '2px' }}>
+            Direct real-time profiles from database • Click profile to inspect full details
+          </p>
         </div>
-        <div style={{ background: '#dcfce7', padding: '6px 16px', borderRadius: '20px', fontSize: '12px', color: '#16a34a', fontWeight: '800', border: '1px solid #bbf7d0' }}>
-          {candidates.length} Profiles Available
+        <div className="profiles-counter-badge">
+          <ShieldCheck size={14} /> {candidates.length} DB Profiles Available
         </div>
       </div>
 
+      {/* SPLIT HORIZONTAL CARD */}
       <div className={`swipe-card-split ${swipeAnimation === 'right' ? 'swipe-right' : swipeAnimation === 'left' ? 'swipe-left' : ''}`}>
         {/* LEFT SIDE DETAILS COLUMN */}
         <div className="swipe-left-details">
           {/* TOP BADGES ROW */}
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <div style={{ background: 'linear-gradient(90deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%)', color: 'white', padding: '6px 14px', borderRadius: '20px', fontWeight: '800', fontSize: '13px', boxShadow: '0 4px 14px rgba(236,72,153,0.35)' }}>
-              {activeCandidate.matchScore}% Match
+            <div className="badge-match-pill">
+              <Sparkles size={13} /> {activeCandidate.matchScore}% Compatibility
             </div>
 
-            {activeCandidate.isRecentlyRegistered && (
-              <div style={{ background: '#10b981', color: 'white', padding: '5px 12px', borderRadius: '16px', fontWeight: '800', fontSize: '11px', boxShadow: '0 4px 10px rgba(16,185,129,0.35)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Sparkles size={12} /> Recently Registered
+            {activeCandidate.relationshipGoal && (
+              <div className="badge-goal-pill">
+                {activeCandidate.relationshipGoal === 'marriage' ? '💍 Marriage' : '❤️ Serious'}
               </div>
             )}
+
+            <button 
+              className="btn-inspect-pill" 
+              onClick={() => onInspectProfile(activeCandidate)}
+              title="Inspect Full Profile Details"
+            >
+              <Maximize2 size={13} /> See Everything
+            </button>
           </div>
 
           {/* CANDIDATE MAIN INFO */}
-          <div style={{ marginTop: '12px' }}>
-            <h2 style={{ fontSize: '30px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px' }}>
-              {activeCandidate.name}, {activeCandidate.age}
+          <div style={{ marginTop: '12px', cursor: 'pointer' }} onClick={() => onInspectProfile(activeCandidate)}>
+            <h2 className="swipe-candidate-name">
+              {activeCandidate.name}, <span className="swipe-candidate-age">{activeCandidate.age}</span>
             </h2>
-            <div style={{ fontSize: '14px', color: '#64748b', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '14px', fontWeight: '600' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <div className="swipe-candidate-subinfo">
+              <span className="subinfo-item">
                 <MapPin size={15} color="#ec4899" /> {activeCandidate.city}
               </span>
               <span>•</span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <span className="subinfo-item">
                 <Briefcase size={15} color="#f59e0b" /> {activeCandidate.profession}
               </span>
+              {activeCandidate.education && (
+                <>
+                  <span>•</span>
+                  <span className="subinfo-item">
+                    <GraduationCap size={15} color="#8b5cf6" /> {activeCandidate.education}
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
           {/* BIO & QUOTE */}
-          <div style={{ background: '#f8fafc', padding: '16px 20px', borderRadius: '18px', border: '1px solid #e2e8f0', margin: '14px 0' }}>
-            <p style={{ fontSize: '14px', color: '#334155', lineHeight: '1.5', fontStyle: 'italic' }}>
-              "{activeCandidate.bio}"
-            </p>
-          </div>
-
-          {/* INTEREST CHIPS */}
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-              Interests & Passion
+          {activeCandidate.bio && (
+            <div 
+              className="swipe-bio-box"
+              onClick={() => onInspectProfile(activeCandidate)}
+              title="Click to view full profile"
+            >
+              <p className="swipe-bio-text">"{activeCandidate.bio}"</p>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {activeCandidate.interests.map(int => (
-                <span key={int} style={{ fontSize: '12px', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '5px 14px', borderRadius: '16px', color: '#475569', fontWeight: '700' }}>
-                  #{int}
-                </span>
+          )}
+
+          {/* INTERESTS & SPOKEN LANGUAGES */}
+          <div className="swipe-chips-section">
+            <div className="chips-title">
+              <Globe size={13} /> Interests & Spoken Languages
+            </div>
+            <div className="chips-container">
+              {activeCandidate.interests?.map(int => (
+                <span key={int} className="chip-tag interest">#{int}</span>
+              ))}
+              {activeCandidate.languages?.map(lang => (
+                <span key={lang} className="chip-tag lang">{lang}</span>
               ))}
             </div>
           </div>
 
-          {/* LEFT SIDE ACTION BUTTONS */}
-          <div className="swipe-actions" style={{ background: 'transparent', borderTop: 'none', padding: '12px 0 0 0', justifyContent: 'flex-start', gap: '16px' }}>
-            <div className="action-circle pass" title="Pass" onClick={() => handleSwipe('left')}>
-              <X size={22} />
+          {/* ACTION BUTTONS */}
+          <div className="swipe-actions">
+            <div 
+              className="action-circle pass" 
+              title="Pass (Swipe Left)" 
+              onClick={() => handleSwipe('left')}
+            >
+              <X size={24} />
             </div>
-            <div className="action-circle chat" title="Instant Chat" onClick={() => onStartChat(activeCandidate)}>
+            <div 
+              className="action-circle chat" 
+              title="Instant Direct Chat" 
+              onClick={() => onStartChat(activeCandidate)}
+            >
               <MessageSquare size={22} />
             </div>
-            <div className="action-circle like" title="Like" onClick={() => handleSwipe('right')}>
-              <Heart size={22} fill="#ffffff" />
+            <div 
+              className="action-circle like" 
+              title="Right Swipe (Send Like)" 
+              onClick={() => handleSwipe('right')}
+            >
+              <Heart size={24} fill="#ffffff" />
             </div>
           </div>
         </div>
 
         {/* RIGHT SIDE CANDIDATE PHOTO */}
-        <div className="swipe-right-photo">
-          <img src={activeCandidate.photos[0]} alt={activeCandidate.name} className="swipe-photo-split" />
+        <div 
+          className="swipe-right-photo" 
+          onClick={() => onInspectProfile(activeCandidate)} 
+          title="Click to inspect all photos & full profile"
+          style={{ cursor: 'pointer' }}
+        >
+          <img 
+            src={activeCandidate.photos[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80'} 
+            alt={activeCandidate.name} 
+            className="swipe-photo-split" 
+          />
+          <div className="photo-expand-badge">
+            <Maximize2 size={14} /> Click to expand
+          </div>
         </div>
       </div>
     </div>

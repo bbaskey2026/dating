@@ -1,0 +1,236 @@
+[
+  {
+    "id": "02dab7da-956d-0a46-0315-3f1e8ad6d34d",
+    "email": "rani@gmail.com",
+    "passwordHash": "hashed_password123",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "342c8c95-c113-45b1-d551-eaefc8706493",
+      "userId": "02dab7da-956d-0a46-0315-3f1e8ad6d34d",
+      "name": "Bhima Baskey",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T22:17:27+05:30",
+      "updatedAt": "2026-08-30T22:17:27+05:30"
+    },
+    "createdAt": "2026-08-30T22:17:27+05:30",
+    "updatedAt": "2026-08-30T22:17:27+05:30"
+  },
+  {
+    "id": "4e4401e7-6888-4415-bd33-77682a6b83f0",
+    "email": "admin@topolgira.com",
+    "passwordHash": "hashed_admin123",
+    "phoneNumber": "+919999900000",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "019b4dd7-6bab-f9c8-a6e2-42e6a37288c7",
+      "userId": "4e4401e7-6888-4415-bd33-77682a6b83f0",
+      "name": "admin",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": null,
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T22:13:45+05:30",
+      "updatedAt": "2026-08-30T22:13:45+05:30"
+    },
+    "createdAt": "2026-08-30T22:13:45+05:30",
+    "updatedAt": "2026-08-30T22:13:45+05:30"
+  },
+  {
+    "id": "3097cc87-b5df-eb2c-7502-50199e026f87",
+    "email": "bhima@topolgira.com",
+    "passwordHash": "hashed_user123",
+    "phoneNumber": "+919999911111",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "60494a65-304f-c2aa-ed8a-ae6d8ea5d303",
+      "userId": "3097cc87-b5df-eb2c-7502-50199e026f87",
+      "name": "bhima",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": null,
+      "languages": null,
+      "hobbies": null,
+      "foodPreferences": null,
+      "musicInterests": null,
+      "photos": null,
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T22:13:45+05:30",
+      "updatedAt": "2026-08-30T22:13:45+05:30"
+    },
+    "createdAt": "2026-08-30T22:13:45+05:30",
+    "updatedAt": "2026-08-30T22:13:45+05:30"
+  },
+  {
+    "id": "c60b7d10-c7bd-738c-ad0b-79c0a9143d14",
+    "email": "ram@gmail.com",
+    "passwordHash": "hashed_password123",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "7e8723e2-45ff-0e5c-8d55-f4f20e366b88",
+      "userId": "c60b7d10-c7bd-738c-ad0b-79c0a9143d14",
+      "name": "Bhima Baskey",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-08-30T22:16:54+05:30",
+      "updatedAt": "2026-08-30T22:16:54+05:30"
+    },
+    "createdAt": "2026-08-30T22:16:54+05:30",
+    "updatedAt": "2026-08-30T22:16:54+05:30"
+  }
+]

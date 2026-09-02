@@ -1,13 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import { UserProfile, Like, Match } from '@topolgira/shared-types';
-import { UserRecord, IUserRepository, IProfileRepository, ILikeRepository, IMatchRepository, Repositories } from '../interfaces';
+import { UserRecord, IUserRepository, IProfileRepository, ILikeRepository, IMatchRepository, IChatRepository, ChatMessageRecord, Repositories } from '../interfaces';
 
 interface DbSchema {
   users: UserRecord[];
   profiles: UserProfile[];
   likes: Like[];
   matches: Match[];
+  chats?: ChatMessageRecord[];
 }
 
 export class JsonFileStore {
@@ -23,12 +24,19 @@ export class JsonFileStore {
     try {
       if (fs.existsSync(this.filePath)) {
         const raw = fs.readFileSync(this.filePath, 'utf-8');
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        return {
+          users: parsed.users || [],
+          profiles: parsed.profiles || [],
+          likes: parsed.likes || [],
+          matches: parsed.matches || [],
+          chats: parsed.chats || [],
+        };
       }
     } catch (err) {
       console.warn(`Failed to read ${this.filePath}, initializing fresh store.`);
     }
-    return { users: [], profiles: [], likes: [], matches: [] };
+    return { users: [], profiles: [], likes: [], matches: [], chats: [] };
   }
 
   public save() {
@@ -153,6 +161,51 @@ export class JsonMatchRepository implements IMatchRepository {
   }
 }
 
+export class JsonChatRepository implements IChatRepository {
+  constructor(private store: JsonFileStore) {
+    if (!this.store.data.chats) {
+      this.store.data.chats = [];
+    }
+  }
+
+  async saveMessage(msg: ChatMessageRecord): Promise<ChatMessageRecord> {
+    if (!this.store.data.chats) {
+      this.store.data.chats = [];
+    }
+    this.store.data.chats.push(msg);
+    this.store.save();
+    return msg;
+  }
+
+  async getMessages(userAId: string, userBId: string, limit: number = 50): Promise<ChatMessageRecord[]> {
+    const chats = this.store.data.chats || [];
+    return chats.filter(
+      m => (m.senderId === userAId && m.receiverId === userBId) || (m.senderId === userBId && m.receiverId === userAId)
+    ).slice(-limit);
+  }
+
+  async getRecentConversations(userId: string): Promise<any[]> {
+    const chats = this.store.data.chats || [];
+    const conversationMap = new Map<string, any>();
+    for (const msg of chats) {
+      if (msg.senderId === userId || msg.receiverId === userId) {
+        const partnerId = msg.senderId === userId ? msg.receiverId : msg.senderId;
+        const userA = userId < partnerId ? userId : partnerId;
+        const userB = userId < partnerId ? partnerId : userId;
+        const key = `${userA}_${userB}`;
+        conversationMap.set(key, {
+          id: msg.chatId || `chat_${key}`,
+          userAId: userA,
+          userBId: userB,
+          lastMessageText: msg.content,
+          lastMessageAt: msg.createdAt,
+        });
+      }
+    }
+    return Array.from(conversationMap.values()).reverse();
+  }
+}
+
 export function createJsonRepositories(filePath?: string): Repositories {
   const store = new JsonFileStore(filePath);
   return {
@@ -160,5 +213,6 @@ export function createJsonRepositories(filePath?: string): Repositories {
     profiles: new JsonProfileRepository(store),
     likes: new JsonLikeRepository(store),
     matches: new JsonMatchRepository(store),
+    chats: new JsonChatRepository(store),
   };
 }

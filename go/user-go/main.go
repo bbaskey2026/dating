@@ -36,7 +36,7 @@ func RequestLoggerMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Request-Id")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Client-Version, X-Request-Id, X-Requested-With, Accept, Origin")
 
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
@@ -225,7 +225,7 @@ func (s *UserServer) handleHealth(w http.ResponseWriter, r *http.Request) {
 func getDriver() string {
 	d := os.Getenv("DB_DRIVER")
 	if d == "" {
-		d = "json"
+		d = "postgres"
 	}
 	return d
 }
@@ -250,8 +250,12 @@ func main() {
 
 	driver := getDriver()
 	dbConfig := os.Getenv("DATABASE_URL")
-	if driver == "json" && dbConfig == "" {
-		dbConfig = "users.json"
+	if dbConfig == "" {
+		if driver == "postgres" {
+			dbConfig = "postgres://postgres:postgres@localhost:5432/topolgira"
+		} else {
+			dbConfig = "users.json"
+		}
 	}
 
 	// Manual Wiring Dependency Injection
