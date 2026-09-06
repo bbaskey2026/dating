@@ -1,0 +1,98 @@
+================================================================================
+TOPOLGIRA DATING APP - SERVICE START COMMANDS
+================================================================================
+
+================================================================================
+METHOD 1: DOCKER COMPOSE (BACKEND + DB) & LOCAL FRONTEND
+================================================================================
+
+[Terminal 1] - Start all backend microservices & databases:
+Path: C:\projects\dating\infrastructure\docker
+Command:
+docker-compose -f C:\projects\dating\infrastructure\docker\docker-compose.yml up --build
+
+[Terminal 2] - Start Frontend React App (Port 5173):
+Path: C:\projects\dating\frontend\web-app
+Command:
+cd C:\projects\dating\frontend\web-app
+npm run dev
+
+
+================================================================================
+METHOD 2: RUN INDIVIDUAL SERVICES IN SEPARATE TERMINALS
+================================================================================
+
+--------------------------------------------------------------------------------
+1. DATABASES (PostgreSQL Port 5432 & Redis Port 6379)
+--------------------------------------------------------------------------------
+Path: C:\projects\dating\infrastructure\docker
+Command:
+cd C:\projects\dating\infrastructure\docker
+docker-compose up postgres redis
+
+(Or run directly from any directory):
+docker-compose -f C:\projects\dating\infrastructure\docker\docker-compose.yml up postgres redis
+
+
+--------------------------------------------------------------------------------
+2. NODE.JS API GATEWAY (Port 4000)
+--------------------------------------------------------------------------------
+Path: C:\projects\dating\node
+Command:
+cd C:\projects\dating\node
+npm run dev
+
+(Or run directly):
+npm --prefix C:\projects\dating\node run dev
+
+
+--------------------------------------------------------------------------------
+3. GO USER MANAGEMENT SERVICE (Port 8081)
+--------------------------------------------------------------------------------
+Path: C:\projects\dating\go\user-go
+Command:
+cd C:\projects\dating\go\user-go
+go run main.go
+
+
+--------------------------------------------------------------------------------
+4. GO MATCHING ENGINE SERVICE (Port 8080)
+--------------------------------------------------------------------------------
+Path: C:\projects\dating\go\matching-go
+Command:
+cd C:\projects\dating\go\matching-go
+go run main.go
+
+
+--------------------------------------------------------------------------------
+5. GO CHAT WEBSOCKET GATEWAY (Port 9000)
+--------------------------------------------------------------------------------
+Path: C:\projects\dating\go\chat-go
+Command:
+cd C:\projects\dating\go\chat-go
+go run main.go
+
+
+--------------------------------------------------------------------------------
+6. FRONTEND WEB APP (Port 5173)
+--------------------------------------------------------------------------------
+Path: C:\projects\dating\frontend\web-app
+Command:
+cd C:\projects\dating\frontend\web-app
+npm run dev
+
+(Or run directly):
+npm --prefix C:\projects\dating\frontend\web-app run dev
+
+
+================================================================================
+SERVICE PORTS & URLS SUMMARY
+================================================================================
+- Frontend Web App:     http://localhost:5173
+- API Gateway (Node):   http://localhost:4000
+- User Service (Go):    http://localhost:8081
+- Matching Engine (Go): http://localhost:8080
+- Chat WebSocket (Go):  ws://localhost:9000/ws
+- PostgreSQL:           localhost:5432
+- Redis:                localhost:6379
+================================================================================

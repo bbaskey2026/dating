@@ -13,15 +13,27 @@ export class ChatsService {
   }
 
   static async getChatHistory(partnerId: string): Promise<ApiResponse<any[]>> {
-    return HttpService.getService<ApiResponse<any[]>>(`chats/${partnerId}/messages`, undefined, nodeApiClient);
+    try {
+      return await HttpService.getService<ApiResponse<any[]>>(`chats/${partnerId}/messages`, undefined, nodeApiClient);
+    } catch (e: any) {
+      return e?.response?.data || { success: false, data: [] };
+    }
   }
 
   static async sendMessage(partnerId: string, content: string): Promise<ApiResponse<any>> {
-    return HttpService.postService<ApiResponse<any>>(`chats/${partnerId}/messages`, { content }, undefined, nodeApiClient);
+    try {
+      return await HttpService.postService<ApiResponse<any>>(`chats/${partnerId}/messages`, { content }, undefined, nodeApiClient);
+    } catch (e: any) {
+      return e?.response?.data || { success: false, error: 'Failed to send message' };
+    }
   }
 
   static async getRecentConversations(): Promise<ApiResponse<any[]>> {
-    return HttpService.getService<ApiResponse<any[]>>(`chats/recent`, undefined, nodeApiClient);
+    try {
+      return await HttpService.getService<ApiResponse<any[]>>(`chats/recent`, undefined, nodeApiClient);
+    } catch (e: any) {
+      return e?.response?.data || { success: false, data: [] };
+    }
   }
 }
 

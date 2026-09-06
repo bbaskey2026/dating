@@ -70,10 +70,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ candidates: _candidate
           ) : (
             <>
               <button className="btn-landing-link" onClick={() => navigate('/login')}>
-                LOGIN IN
+                Sign In
               </button>
               <button className="btn-landing-signup" onClick={() => navigate('/register')}>
-                SIGNUP NOW
+                Sign Up
               </button>
             </>
           )}
@@ -99,7 +99,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ candidates: _candidate
 
           <div className="hero-cta-box">
             <button className="btn-hero-ready" onClick={handleCtaClick}>
-              I'M READY
+              Get Started Now
             </button>
           </div>
 

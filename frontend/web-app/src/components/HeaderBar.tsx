@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
-import { 
-  LogIn, 
-  UserPlus, 
-  LayoutDashboard, 
-  Flame, 
-  Users, 
-  MessageSquare, 
-  Settings, 
-  LogOut, 
-  Layers, 
-  ShieldCheck, 
-  Zap, 
+import {
+  LogIn,
+  UserPlus,
+  LayoutDashboard,
+  Flame,
+  Users,
+  MessageSquare,
+  Settings,
+  Zap,
   Heart,
   Home,
   ChevronLeft,
@@ -26,8 +23,8 @@ interface HeaderBarProps {
 
 export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { user, logout } = useAuth();
-  const { unreadCount, wsConnected } = useNotifications();
+  const { user } = useAuth();
+  const { unreadCount } = useNotifications();
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -37,8 +34,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
   return (
     <aside className={`left-sidebar-nav ${isCollapsed ? 'collapsed' : ''}`}>
       {/* TOGGLE OPEN/CLOSE BUTTON */}
-      <button 
-        className="sidebar-toggle-btn" 
+      <button
+        className="sidebar-toggle-btn"
         onClick={toggleSidebar}
         title={isCollapsed ? "Open Sidebar" : "Close Sidebar"}
         aria-label={isCollapsed ? "Open Sidebar" : "Close Sidebar"}
@@ -55,28 +52,15 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
           <div className="brand-text-box">
             <span className="brand-title">Topolgira</span>
             <small className="brand-subtitle">
-              Dating App <Heart size={11} fill="#ec4899" color="#ec4899" />
+              Meaningful Connections <Heart size={11} fill="#ec4899" color="#ec4899" />
             </small>
           </div>
         )}
       </div>
 
-      {!isCollapsed && (
-        <div className="sidebar-sla-tag" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <ShieldCheck size={13} /> SLA 99.99%
-          </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10.5px', color: wsConnected ? '#10b981' : '#f59e0b', fontWeight: '800' }}>
-            <span className="online-indicator-dot" style={{ width: '6px', height: '6px', background: wsConnected ? '#10b981' : '#f59e0b' }}></span>
-            {wsConnected ? 'LIVE' : 'SYNC'}
-          </span>
-        </div>
-      )}
-
       {/* VERTICAL NAVIGATION LIST */}
       <nav className="sidebar-nav-list">
-        {!isCollapsed && <div className="sidebar-section-label">NAVIGATION</div>}
-        
+
         <NavLink to="/" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Home" end>
           <Home size={20} />
           {!isCollapsed && <span>Home</span>}
@@ -84,19 +68,15 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
 
         {user ? (
           <>
-            <NavLink to="/swipe" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Swipe Deck">
+            <NavLink to="/swipe" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Discover">
               <Flame size={20} />
-              {!isCollapsed && <span>Swipe Deck</span>}
+              {!isCollapsed && <span>Discover</span>}
             </NavLink>
-            <NavLink to="/dashboard" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Dashboard">
-              <LayoutDashboard size={20} />
-              {!isCollapsed && <span>Dashboard</span>}
-            </NavLink>
-            <NavLink to="/catalog" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title={`Candidates (${candidatesCount})`}>
+            <NavLink to="/catalog" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title={`Explore (${candidatesCount})`}>
               <Users size={20} />
-              {!isCollapsed && <span>Candidates ({candidatesCount})</span>}
+              {!isCollapsed && <span>Explore ({candidatesCount})</span>}
             </NavLink>
-            <NavLink to="/chat" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Live Chat">
+            <NavLink to="/chat" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Messages">
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <MessageSquare size={20} />
                 {unreadCount > 0 && isCollapsed && (
@@ -105,31 +85,31 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
               </div>
               {!isCollapsed && (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                  <span>Live Chat</span>
+                  <span>Messages</span>
                   {unreadCount > 0 && (
                     <span className="sidebar-unread-pill">{unreadCount}</span>
                   )}
                 </div>
               )}
             </NavLink>
-            <NavLink to="/settings" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Settings">
-              <Settings size={20} />
-              {!isCollapsed && <span>Settings</span>}
+            <NavLink to="/dashboard" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Activity">
+              <LayoutDashboard size={20} />
+              {!isCollapsed && <span>Activity</span>}
             </NavLink>
-            <NavLink to="/showcase" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="All Views">
-              <Layers size={20} />
-              {!isCollapsed && <span>All Views</span>}
+            <NavLink to="/settings" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Preferences">
+              <Settings size={20} />
+              {!isCollapsed && <span>Preferences</span>}
             </NavLink>
           </>
         ) : (
           <>
-            <NavLink to="/login" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Login">
+            <NavLink to="/login" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Sign In">
               <LogIn size={20} />
-              {!isCollapsed && <span>Login</span>}
+              {!isCollapsed && <span>Sign In</span>}
             </NavLink>
-            <NavLink to="/register" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Register">
+            <NavLink to="/register" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} title="Sign Up">
               <UserPlus size={20} />
-              {!isCollapsed && <span>Register</span>}
+              {!isCollapsed && <span>Sign Up</span>}
             </NavLink>
           </>
         )}
@@ -138,19 +118,48 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ candidatesCount }) => {
       {/* BOTTOM USER PROFILE CARD */}
       <div className="sidebar-footer">
         {user ? (
-          <div className="sidebar-user-card">
-            {!isCollapsed && (
-              <div className="sidebar-user-info">
-                <span className="sidebar-user-name">{user.name || user.email}</span>
-                <span className="sidebar-user-status">
-                  <span className="online-indicator-dot"></span> Online
-                </span>
+          <div 
+            className="sidebar-user-card" 
+            onClick={() => navigate('/settings')} 
+            title="View Profile & Settings"
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden', width: '100%' }}>
+              <div style={{ position: 'relative', flexShrink: 0 }}>
+                <img 
+                  src={user.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'} 
+                  alt={user.name || 'User'} 
+                  style={{ 
+                    width: '38px', 
+                    height: '38px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover', 
+                    border: '2px solid #ec4899',
+                    boxShadow: '0 2px 8px rgba(236,72,153,0.3)',
+                    display: 'block'
+                  }} 
+                />
+                <span 
+                  className="online-indicator-dot" 
+                  style={{ 
+                    position: 'absolute', 
+                    bottom: '0', 
+                    right: '0', 
+                    width: '9px', 
+                    height: '9px', 
+                    border: '2px solid #ffffff' 
+                  }} 
+                />
               </div>
-            )}
-            <button className="btn-logout-pill" onClick={logout} title="Sign Out">
-              <LogOut size={16} />
-              {!isCollapsed && <span>Sign Out</span>}
-            </button>
+
+              {!isCollapsed && (
+                <div className="sidebar-user-info" style={{ flex: 1 }}>
+                  <span className="sidebar-user-name" style={{ fontSize: '13.5px', fontWeight: 800 }}>{user.name || user.email}</span>
+                  <span className="sidebar-user-status" style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span className="online-indicator-dot" style={{ width: '6px', height: '6px' }}></span> View Profile
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

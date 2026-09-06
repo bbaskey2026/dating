@@ -59,7 +59,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
           <span>
             {likeToast.isMatch 
               ? `🎉 Mutual Match with ${likeToast.name}! Chat unlocked!`
-              : `💖 Liked ${likeToast.name}! Recorded in DB.`
+              : `💖 You liked ${likeToast.name}!`
             }
           </span>
         </div>
@@ -69,22 +69,22 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
       <div className="catalog-header-bar">
         <div>
           <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>
-            Registered Candidates Catalog
+            Explore Verified Singles
           </h2>
           <p style={{ color: '#64748b', fontSize: '13.5px', marginTop: '4px' }}>
-            Browse active database profiles, inspect full background details, or start instant chats.
+            Browse active members in your area, view photos & stories, or start a conversation.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <div className="profiles-counter-badge">
-            <ShieldCheck size={14} /> {candidates.length} DB Candidates
+            <ShieldCheck size={14} /> {candidates.length} Active Members
           </div>
           <button 
             className="btn-secondary" 
             style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }} 
             onClick={onRefresh}
           >
-            <RefreshCw size={14} className={isLoading ? 'spinner-spin' : ''} /> Refresh DB
+            <RefreshCw size={14} className={isLoading ? 'spinner-spin' : ''} /> Refresh
           </button>
         </div>
       </div>
@@ -93,17 +93,17 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         <div className="empty-state-pane">
           <div className="spinner-glow" />
           <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginTop: '16px' }}>
-            Loading Candidates from Database...
+            Finding Nearby Members...
           </h3>
         </div>
       ) : candidates.length === 0 ? (
         <div className="empty-state-pane">
           <Sparkles size={40} color="#ec4899" />
           <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginTop: '12px' }}>
-            No Registered Candidates Found
+            No Members Found in this Area
           </h3>
           <p style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>
-            Click Refresh to sync latest registrations from the database.
+            Adjust your discovery preferences or check back later to meet new singles.
           </p>
         </div>
       ) : (

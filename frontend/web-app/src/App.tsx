@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import { HeaderBar } from './components/HeaderBar';
@@ -23,8 +23,6 @@ export function AppContent() {
   const { user } = useAuth();
   const { activeMatch, triggerMatchCelebration, closeMatchModal, sendWebSocketEvent } = useNotifications();
   const navigate = useNavigate();
-  const location = useLocation();
-  const isLandingPage = location.pathname === '/' || location.pathname === '/landing';
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [inspectingCandidate, setInspectingCandidate] = useState<Candidate | null>(null);
@@ -89,21 +87,34 @@ export function AppContent() {
   const handleLikeFromModal = async (cand: Candidate) => {
     try {
       const res = await MatchesService.sendLike(cand.id);
-      // Broadcast live real-time like event
-      if (user?.id) {
-        sendWebSocketEvent({
-          type: 'like',
-          senderId: user.id,
-          receiverId: cand.id,
-        });
-      }
-
       if (res?.message === 'ITS_A_MATCH' || res?.data?.isMatch) {
         triggerMatchCelebration(cand);
         // Broadcast live match celebration event to partner
         if (user?.id) {
           sendWebSocketEvent({
             type: 'match',
+            senderId: user.id,
+            receiverId: cand.id,
+            candidate: {
+              id: user.id,
+              name: user.name || 'Your Match',
+              photos: [user.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'],
+              age: 25,
+              matchScore: cand.matchScore || 92,
+              city: 'Ranchi',
+              profession: 'Topolgira Member',
+              relationshipGoal: 'marriage',
+              bio: 'Mutual match on Topolgira!',
+              interests: ['Music', 'Travel'],
+              verified: true,
+            },
+          });
+        }
+      } else {
+        // Broadcast live real-time like event
+        if (user?.id) {
+          sendWebSocketEvent({
+            type: 'like',
             senderId: user.id,
             receiverId: cand.id,
           });
@@ -121,13 +132,26 @@ export function AppContent() {
         type: 'match',
         senderId: user.id,
         receiverId: cand.id,
+        candidate: {
+          id: user.id,
+          name: user.name || 'Your Match',
+          photos: [user.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'],
+          age: 25,
+          matchScore: cand.matchScore || 92,
+          city: 'Ranchi',
+          profession: 'Topolgira Member',
+          relationshipGoal: 'marriage',
+          bio: 'Mutual match on Topolgira!',
+          interests: ['Music', 'Travel'],
+          verified: true,
+        },
       });
     }
   };
 
   return (
     <div className="card-container">
-      {!isLandingPage && <HeaderBar candidatesCount={candidates.length} />}
+      <HeaderBar candidatesCount={candidates.length} />
       <main className="main-content">
         <Routes>
           {/* PUBLIC UNPROTECTED ROUTES */}
@@ -137,82 +161,82 @@ export function AppContent() {
           <Route path="/register" element={<RegisterPage onCandidateAdded={handleAddCandidate} />} />
 
           {/* STRICTLY PROTECTED ROUTES - REQUIRES LOGIN */}
-          <Route 
-            path="/swipe" 
+          <Route
+            path="/swipe"
             element={
               <ProtectedRoute featureName="Candidate Swipe Deck">
-                <SwipePage 
-                  candidates={candidates} 
+                <SwipePage
+                  candidates={candidates}
                   isLoading={isLoading}
-                  onStartChat={handleStartChat} 
-                  onInspectProfile={handleInspectProfile}
-                  onMatchTriggered={handleMatchTriggered}
-                />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute featureName="User Dashboard & SLA Analytics">
-                <DashboardPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/catalog" 
-            element={
-              <ProtectedRoute featureName="Registered Profiles Catalog">
-                <CatalogPage 
-                  candidates={candidates} 
-                  isLoading={isLoading}
-                  onRefresh={fetchLiveCandidates} 
                   onStartChat={handleStartChat}
                   onInspectProfile={handleInspectProfile}
                   onMatchTriggered={handleMatchTriggered}
                 />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/chat" 
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute featureName="User Dashboard & SLA Analytics">
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/catalog"
+            element={
+              <ProtectedRoute featureName="Registered Profiles Catalog">
+                <CatalogPage
+                  candidates={candidates}
+                  isLoading={isLoading}
+                  onRefresh={fetchLiveCandidates}
+                  onStartChat={handleStartChat}
+                  onInspectProfile={handleInspectProfile}
+                  onMatchTriggered={handleMatchTriggered}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
             element={
               <ProtectedRoute featureName="Realtime WebSocket Chat">
-                <ChatPage 
-                  selectedCandidate={selectedCandidate || candidates[0] || null} 
-                  candidates={candidates} 
+                <ChatPage
+                  selectedCandidate={selectedCandidate || candidates[0] || null}
+                  candidates={candidates}
                   onSelectCandidate={setSelectedCandidate}
                   onInspectProfile={handleInspectProfile}
                 />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/settings" 
+          <Route
+            path="/settings"
             element={
               <ProtectedRoute featureName="Profile & Discovery Settings">
                 <SettingsPage />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/showcase" 
+          <Route
+            path="/showcase"
             element={
               <ProtectedRoute featureName="All Components Showcase">
-                <ShowcasePage 
-                  candidates={candidates} 
-                  selectedCandidate={selectedCandidate || candidates[0]} 
-                  onRefresh={fetchLiveCandidates} 
-                  onStartChat={handleStartChat} 
+                <ShowcasePage
+                  candidates={candidates}
+                  selectedCandidate={selectedCandidate || candidates[0]}
+                  onRefresh={fetchLiveCandidates}
+                  onStartChat={handleStartChat}
                 />
               </ProtectedRoute>
-            } 
+            }
           />
         </Routes>
       </main>
 
       {/* FULL PROFILE DETAILS INSPECTOR MODAL */}
-      <ProfileDetailsModal 
+      <ProfileDetailsModal
         candidate={inspectingCandidate}
         isOpen={!!inspectingCandidate}
         onClose={() => setInspectingCandidate(null)}
@@ -221,7 +245,7 @@ export function AppContent() {
       />
 
       {/* MUTUAL MATCH CELEBRATION MODAL */}
-      <MatchNotificationModal 
+      <MatchNotificationModal
         candidate={activeMatch}
         isOpen={!!activeMatch}
         onClose={closeMatchModal}
@@ -229,7 +253,7 @@ export function AppContent() {
       />
 
       {/* REALTIME TOAST NOTIFICATIONS POPUPS */}
-      <ToastNotificationContainer 
+      <ToastNotificationContainer
         onStartChat={handleStartChat}
         onInspectProfile={handleInspectProfile}
       />

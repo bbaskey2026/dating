@@ -528,5 +528,73 @@
     },
     "createdAt": "2026-08-30T12:48:53+05:30",
     "updatedAt": "2026-08-30T12:48:53+05:30"
+  },
+  {
+    "id": "1a866ecf-d7d1-046b-4f71-8503a21a4dd4",
+    "email": "arjun@topolgira.com",
+    "passwordHash": "pbkdf2$10000$69e88ec790080b5feb823671ae308530$5c98a76ee213bed349d0088993ffd1060e225f440cdf99cc6cdafa099bc718e1",
+    "phoneNumber": "+919999922222",
+    "role": "user",
+    "status": "active",
+    "isVerified": false,
+    "profile": {
+      "id": "1dd66716-c96f-ec58-c786-9d10370a118a",
+      "userId": "1a866ecf-d7d1-046b-4f71-8503a21a4dd4",
+      "name": "Arjun Tudu",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "B.Tech Computer Science",
+      "profession": "Software Engineer",
+      "relationshipGoal": "marriage",
+      "bio": "Passionate about polyglot software architecture, travel, and music.",
+      "interests": [
+        "Music",
+        "Travel",
+        "Cricket"
+      ],
+      "languages": [
+        "Hindi",
+        "English",
+        "Santhali"
+      ],
+      "hobbies": [
+        "Hiking",
+        "Guitar"
+      ],
+      "foodPreferences": [
+        "Spicy",
+        "Street Food"
+      ],
+      "musicInterests": [
+        "Bollywood",
+        "Rock"
+      ],
+      "photos": [
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format\u0026fit=crop\u0026w=400\u0026q=80"
+      ],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-09-03T17:31:22Z",
+      "updatedAt": "2026-09-03T17:31:22Z"
+    },
+    "createdAt": "2026-09-03T17:31:22Z",
+    "updatedAt": "2026-09-03T17:31:22Z"
   }
 ]

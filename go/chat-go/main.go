@@ -67,23 +67,31 @@ func (cm *ConnectionManager) Unregister(userID string) {
 	)
 }
 
-func (cm *ConnectionManager) Broadcast(senderID string, msg repository.ChatMessagePayload) int {
-	start := time.Now()
+func (cm *ConnectionManager) SendDirectRaw(receiverID string, rawData string) bool {
 	cm.mu.RLock()
 	defer cm.mu.RUnlock()
 
-	data, err := json.Marshal(msg)
-	if err != nil {
-		slog.Error("Failed to marshal broadcast payload", slog.String("error", err.Error()))
-		return 0
+	key := strings.TrimSpace(receiverID)
+	ws, ok := cm.connections[key]
+	if ok && ws != nil {
+		if err := websocket.Message.Send(ws, rawData); err == nil {
+			return true
+		}
 	}
+	return false
+}
+
+func (cm *ConnectionManager) BroadcastRaw(senderID string, rawData string) int {
+	start := time.Now()
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
 
 	deliveredCount := 0
 	senderKey := strings.TrimSpace(senderID)
 
 	for uid, ws := range cm.connections {
-		if ws != nil {
-			if err := websocket.Message.Send(ws, string(data)); err == nil {
+		if uid != senderKey && ws != nil {
+			if err := websocket.Message.Send(ws, rawData); err == nil {
 				deliveredCount++
 			} else {
 				slog.Warn("Failed to deliver WS message to client", slog.String("uid", uid), slog.String("error", err.Error()))
@@ -93,8 +101,6 @@ func (cm *ConnectionManager) Broadcast(senderID string, msg repository.ChatMessa
 
 	slog.Info("📢 [Realtime Broadcast Delivered]",
 		slog.String("sender_id", senderKey),
-		slog.String("receiver_id", msg.ReceiverID),
-		slog.String("content", msg.Content),
 		slog.Int("recipients_delivered", deliveredCount),
 		slog.Duration("duration", time.Since(start)),
 	)
@@ -166,8 +172,13 @@ func (cs *ChatServer) handleWS(ws *websocket.Conn) {
 				// 1. Persist message via DI repository
 				_ = cs.msgRepo.SaveMessage(payload)
 
-				// 2. Broadcast message live in real-time to all connected clients
-				deliveredCount := cs.manager.Broadcast(payload.SenderID, payload)
+				// 2. Deliver message directly to receiver or broadcast
+				deliveredCount := 0
+				if payload.ReceiverID != "" && cs.manager.SendDirectRaw(payload.ReceiverID, reply) {
+					deliveredCount++
+				} else {
+					deliveredCount = cs.manager.BroadcastRaw(payload.SenderID, reply)
+				}
 
 				// 3. Send ACK back to sender
 				status := "SENT"
@@ -187,6 +198,19 @@ func (cs *ChatServer) handleWS(ws *websocket.Conn) {
 				data, _ := json.Marshal(ack)
 				_ = websocket.Message.Send(ws, string(data))
 			}
+
+		case "typing":
+			if payload.ReceiverID != "" {
+				cs.manager.SendDirectRaw(payload.ReceiverID, reply)
+			} else {
+				cs.manager.BroadcastRaw(payload.SenderID, reply)
+			}
+
+		case "like", "match":
+			if payload.ReceiverID != "" {
+				cs.manager.SendDirectRaw(payload.ReceiverID, reply)
+			}
+			cs.manager.BroadcastRaw(payload.SenderID, reply)
 		}
 	}
 }

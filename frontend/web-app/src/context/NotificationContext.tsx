@@ -28,6 +28,7 @@ interface NotificationContextType {
   closeMatchModal: () => void;
   markConversationRead: (contactId: string) => void;
   sendWebSocketEvent: (payload: any) => boolean;
+  sendTypingIndicator: (receiverId: string, isTyping: boolean) => boolean;
   subscribeToMessages: (cb: (msg: any) => void) => () => void;
 }
 
@@ -105,13 +106,127 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode; candida
     });
   }, []);
 
+  const handleIncomingEvent = useCallback((data: any) => {
+    if (!data || typeof data !== 'object') return;
+
+    // Notify all subscribed listeners (e.g. ChatPage)
+    messageListenersRef.current.forEach(listener => {
+      try { listener(data); } catch {}
+    });
+
+    // 1. Handle incoming chat message
+    if (data.type === 'message' && data.senderId && data.senderId !== user?.id) {
+      const partnerId = data.senderId;
+      const matchingCand = candidatesRef.current.find(c => c.id === partnerId);
+      const senderName = data.senderName || matchingCand?.name || 'New Message';
+      const avatar = data.avatarUrl || matchingCand?.photos?.[0];
+
+      // Increment unread count
+      setUnreadMap(prev => ({
+        ...prev,
+        [partnerId]: (prev[partnerId] || 0) + 1,
+      }));
+
+      // Play audio chime
+      notificationAudio.playMessageChime();
+
+      // Show floating toast alert
+      showToast({
+        type: 'message',
+        title: senderName,
+        message: data.content || 'Sent you a message',
+        senderId: partnerId,
+        senderName,
+        avatarUrl: avatar,
+        candidate: matchingCand,
+      });
+    }
+
+    // 2. Handle incoming match alert
+    if (data.type === 'match' && (data.receiverId === user?.id || data.receiverId === '*')) {
+      const partnerId = data.senderId;
+      let matchingCand = candidatesRef.current.find(c => c.id === partnerId);
+      if (!matchingCand && data.candidate) {
+        matchingCand = data.candidate;
+      } else if (!matchingCand) {
+        matchingCand = {
+          id: partnerId,
+          name: data.senderName || 'Your Match',
+          photos: [data.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'],
+          age: 24,
+          matchScore: 94,
+          gender: 'female',
+          city: 'Ranchi',
+          profession: 'Topolgira Member',
+          relationshipGoal: 'marriage',
+          bio: 'Mutual match on Topolgira!',
+          interests: ['Music', 'Travel', 'Art'],
+          verified: true,
+        };
+      }
+      if (matchingCand) {
+        triggerMatchCelebration(matchingCand);
+      }
+    }
+
+    // 3. Handle incoming like alert
+    if (data.type === 'like' && data.receiverId === user?.id) {
+      const partnerId = data.senderId;
+      const matchingCand = candidatesRef.current.find(c => c.id === partnerId);
+      const name = data.senderName || matchingCand?.name || 'Someone';
+      notificationAudio.playMessageChime();
+      showToast({
+        type: 'like',
+        title: '💖 New Like!',
+        message: `${name} liked your profile. Check your swipe deck!`,
+        senderId: partnerId,
+        senderName: name,
+        avatarUrl: matchingCand?.photos?.[0],
+        candidate: matchingCand,
+      });
+    }
+  }, [user?.id, showToast, triggerMatchCelebration]);
+
+  // Inter-tab BroadcastChannel Bridge for multi-tab testing
+  useEffect(() => {
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel('topolgira_sync_bus');
+      bc.onmessage = (event) => {
+        handleIncomingEvent(event.data);
+      };
+    } catch {}
+
+    return () => {
+      try { bc?.close(); } catch {}
+    };
+  }, [handleIncomingEvent]);
+
   const sendWebSocketEvent = useCallback((payload: any): boolean => {
+    // Inter-tab bridge
+    try {
+      const bc = new BroadcastChannel('topolgira_sync_bus');
+      bc.postMessage(payload);
+      bc.close();
+    } catch {}
+
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify(payload));
       return true;
     }
-    return false;
+    return true;
   }, []);
+
+  const sendTypingIndicator = useCallback((receiverId: string, isTyping: boolean): boolean => {
+    if (!user?.id || !receiverId) return false;
+    return sendWebSocketEvent({
+      type: 'typing',
+      senderId: user.id,
+      receiverId,
+      isTyping,
+      timestamp: Math.floor(Date.now() / 1000),
+    });
+  }, [user?.id, sendWebSocketEvent]);
 
   // Global WebSocket Connection
   useEffect(() => {
@@ -146,64 +261,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode; candida
           if (isDisposed) return;
           try {
             const data = JSON.parse(event.data);
-
-            // Notify all subscribed listeners (e.g. ChatPage)
-            messageListenersRef.current.forEach(listener => {
-              try { listener(data); } catch {}
-            });
-
-            // Handle incoming chat message
-            if (data.type === 'message' && data.senderId && data.senderId !== user.id) {
-              const partnerId = data.senderId;
-              const matchingCand = candidatesRef.current.find(c => c.id === partnerId);
-              const senderName = matchingCand?.name || 'New Message';
-              const avatar = matchingCand?.photos?.[0];
-
-              // Increment unread count
-              setUnreadMap(prev => ({
-                ...prev,
-                [partnerId]: (prev[partnerId] || 0) + 1,
-              }));
-
-              // Play audio chime
-              notificationAudio.playMessageChime();
-
-              // Show floating toast alert
-              showToast({
-                type: 'message',
-                title: senderName,
-                message: data.content || 'Sent you a message',
-                senderId: partnerId,
-                senderName,
-                avatarUrl: avatar,
-                candidate: matchingCand,
-              });
-            }
-
-            // Handle incoming match alert
-            if (data.type === 'match' && data.receiverId === user.id) {
-              const partnerId = data.senderId;
-              const matchingCand = candidatesRef.current.find(c => c.id === partnerId);
-              if (matchingCand) {
-                triggerMatchCelebration(matchingCand);
-              }
-            }
-
-            // Handle incoming like alert
-            if (data.type === 'like' && data.receiverId === user.id) {
-              const partnerId = data.senderId;
-              const matchingCand = candidatesRef.current.find(c => c.id === partnerId);
-              const name = matchingCand?.name || 'Someone';
-              showToast({
-                type: 'like',
-                title: '💖 New Like!',
-                message: `${name} liked your profile. Check your swipe deck!`,
-                senderId: partnerId,
-                senderName: name,
-                avatarUrl: matchingCand?.photos?.[0],
-                candidate: matchingCand,
-              });
-            }
+            handleIncomingEvent(data);
           } catch (e) {
             console.error('Error decoding WS event', e);
           }
@@ -242,7 +300,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode; candida
         }
       }
     };
-  }, [user?.id, showToast, triggerMatchCelebration]);
+  }, [user?.id, handleIncomingEvent]);
 
   // Background Match Polling: Detects matches created by either user in real-time
   useEffect(() => {
@@ -294,6 +352,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode; candida
         closeMatchModal,
         markConversationRead,
         sendWebSocketEvent,
+        sendTypingIndicator,
         subscribeToMessages,
       }}
     >

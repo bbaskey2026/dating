@@ -31,6 +31,7 @@ export const SwipePage: React.FC<SwipePageProps> = ({
 }) => {
   const [currentSwipeIndex, setCurrentSwipeIndex] = useState(0);
   const [swipeAnimation, setSwipeAnimation] = useState<'left' | 'right' | null>(null);
+  const [isEntering, setIsEntering] = useState(false);
   const [likeToast, setLikeToast] = useState<{ name: string; isMatch: boolean } | null>(null);
 
   const activeCandidate = candidates[currentSwipeIndex] || candidates[0];
@@ -57,7 +58,9 @@ export const SwipePage: React.FC<SwipePageProps> = ({
     setTimeout(() => {
       setSwipeAnimation(null);
       setCurrentSwipeIndex(prev => (prev + 1) % (candidates.length || 1));
-    }, 280);
+      setIsEntering(true);
+      setTimeout(() => setIsEntering(false), 280);
+    }, 260);
   };
 
   if (isLoading && candidates.length === 0) {
@@ -65,10 +68,10 @@ export const SwipePage: React.FC<SwipePageProps> = ({
       <div className="empty-state-pane">
         <div className="spinner-glow" />
         <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginTop: '16px' }}>
-          Loading Profiles from Database...
+          Finding Compatible Matches...
         </h3>
         <p style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>
-          Fetching active user profiles & compatibility scores
+          Analyzing preferences and curating compatible singles
         </p>
       </div>
     );
@@ -79,10 +82,10 @@ export const SwipePage: React.FC<SwipePageProps> = ({
       <div className="empty-state-pane">
         <Sparkles size={48} color="#ec4899" />
         <h3 style={{ fontSize: '22px', fontWeight: 900, color: '#0f172a', marginTop: '16px' }}>
-          No More Profiles In Your Area
+          You're All Caught Up!
         </h3>
         <p style={{ color: '#64748b', fontSize: '14px', marginTop: '6px', maxWidth: '400px' }}>
-          You've explored all currently available registered profiles in the database. Check back soon for new registrations!
+          You've viewed all current recommendations. Check back soon or broaden your search preferences!
         </p>
       </div>
     );
@@ -97,7 +100,7 @@ export const SwipePage: React.FC<SwipePageProps> = ({
           <span>
             {likeToast.isMatch 
               ? `🎉 It's a Mutual Match with ${likeToast.name}! Chat unlocked!`
-              : `💖 You liked ${likeToast.name}! Like recorded in DB.`
+              : `💖 You liked ${likeToast.name}!`
             }
           </span>
         </div>
@@ -106,18 +109,18 @@ export const SwipePage: React.FC<SwipePageProps> = ({
       {/* TOP HEADER STATUS BAR */}
       <div className="swipe-top-bar">
         <div>
-          <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>Explore Registered Profiles</h2>
+          <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>Discover Matches</h2>
           <p style={{ color: '#64748b', fontSize: '13.5px', marginTop: '2px' }}>
-            Direct real-time profiles from database • Click profile to inspect full details
+            Curated recommendations for your vibe • Tap profile to view full bio & photos
           </p>
         </div>
         <div className="profiles-counter-badge">
-          <ShieldCheck size={14} /> {candidates.length} DB Profiles Available
+          <ShieldCheck size={14} /> {candidates.length} Profiles Near You
         </div>
       </div>
 
       {/* SPLIT HORIZONTAL CARD */}
-      <div className={`swipe-card-split ${swipeAnimation === 'right' ? 'swipe-right' : swipeAnimation === 'left' ? 'swipe-left' : ''}`}>
+      <div className={`swipe-card-split ${swipeAnimation === 'right' ? 'swipe-right' : swipeAnimation === 'left' ? 'swipe-left' : isEntering ? 'swipe-enter' : ''}`}>
         {/* LEFT SIDE DETAILS COLUMN */}
         <div className="swipe-left-details">
           {/* TOP BADGES ROW */}

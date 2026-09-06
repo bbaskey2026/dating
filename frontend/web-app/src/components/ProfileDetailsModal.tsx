@@ -102,7 +102,7 @@ export const ProfileDetailsModal: React.FC<ProfileDetailsModalProps> = ({
           {/* OVERLAY BADGES */}
           <div className="gallery-top-badges">
             <span className="badge-verified">
-              <ShieldCheck size={14} /> 100% DB Verified
+              <ShieldCheck size={14} /> Verified Member
             </span>
             <span className="badge-match-score">
               <Sparkles size={14} /> {candidate.matchScore}% Match

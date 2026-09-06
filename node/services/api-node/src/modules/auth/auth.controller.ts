@@ -133,7 +133,7 @@ export function createAuthRouter(repos: Repositories): Router {
       await repos.profiles.create(newProfile);
 
       // 4. Generate JWT access and refresh tokens
-      const accessToken = jwt.sign({ userId, email, role: 'user' }, JWT_SECRET, { expiresIn: '7d' });
+      const accessToken = jwt.sign({ userId, email, role: 'user' }, JWT_SECRET, { expiresIn: '15m' });
       const refreshToken = jwt.sign({ userId }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
       refreshTokens.set(refreshToken, { userId, expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 });
@@ -183,7 +183,7 @@ export function createAuthRouter(repos: Repositories): Router {
         return res.status(401).json(resp);
       }
 
-      const accessToken = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+      const accessToken = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '15m' });
       const refreshToken = jwt.sign({ userId: user.id }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
       refreshTokens.set(refreshToken, { userId: user.id, expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 });

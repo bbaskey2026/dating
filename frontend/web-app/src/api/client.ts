@@ -5,11 +5,11 @@ export const GO_MATCHING_URL = 'http://localhost:8080';
 export const GO_CHAT_URL = 'http://localhost:9000';
 
 export const getActiveToken = (): string => {
-  return sessionStorage.getItem('topolgira_token') || '';
+  return localStorage.getItem('topolgira_token') || sessionStorage.getItem('topolgira_token') || '';
 };
 
 export const getActiveUser = (): any => {
-  const saved = sessionStorage.getItem('topolgira_user');
+  const saved = localStorage.getItem('topolgira_user') || sessionStorage.getItem('topolgira_user');
   if (!saved) return null;
   try {
     return JSON.parse(saved);
