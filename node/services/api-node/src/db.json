@@ -503,6 +503,52 @@
       "createdAt": "2026-08-30T09:30:14.835Z",
       "updatedAt": "2026-08-30T09:30:14.835Z",
       "passwordHash": "$2a$10$awIjf2EP5bOQjiNz69eBw.QZxM832sovgkvgjgZUcOJ88ZX46udV."
+    },
+    {
+      "id": "d05ff970-de68-4e65-8fe5-7f9a926541ef",
+      "email": "reg_1789063073576_0.0066418770010594486@example.com",
+      "phoneNumber": "+919999988888",
+      "role": "user",
+      "isVerified": false,
+      "createdAt": "2026-09-10T17:57:54.256Z",
+      "updatedAt": "2026-09-10T17:57:54.256Z",
+      "passwordHash": "$2a$10$Dt2OV4lNTl/0zBvL5zB6tet5.7TXWtGPeErhJKa09U5o5JRCAZDr."
+    },
+    {
+      "id": "37e89d33-5068-4a29-b532-033751a09674",
+      "email": "login_1789063074313_0.1346641713148391@example.com",
+      "role": "user",
+      "isVerified": false,
+      "createdAt": "2026-09-10T17:57:54.498Z",
+      "updatedAt": "2026-09-10T17:57:54.498Z",
+      "passwordHash": "$2a$10$I8TXEgePjCrQJrPqDsmnjuI4NGWThYhFDP9l0/7IyGC9o16r/6.ai"
+    },
+    {
+      "id": "75d096ba-96d1-453f-a705-90abf077448c",
+      "email": "profile_1789063074698_0.9232700837627421@example.com",
+      "role": "user",
+      "isVerified": false,
+      "createdAt": "2026-09-10T17:57:54.877Z",
+      "updatedAt": "2026-09-10T17:57:54.877Z",
+      "passwordHash": "$2a$10$0TT15FcLrI.frpId/HHOl.JqGeUw5J/I/XeNTHMQd0gn5YsaQmSQW"
+    },
+    {
+      "id": "eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "email": "match_a_1789063075083_0.6982226952039501@test.com",
+      "role": "user",
+      "isVerified": false,
+      "createdAt": "2026-09-10T17:57:55.348Z",
+      "updatedAt": "2026-09-10T17:57:55.348Z",
+      "passwordHash": "$2a$10$N/dDq3kVJG74qJqwtY.mSeri2uy0I.CwAuUveiiKZTUV/pVi1AH/K"
+    },
+    {
+      "id": "ec6b4084-8f16-4a86-a10f-45f73a6d2d5c",
+      "email": "match_b_1789063075083_0.755514457611973@test.com",
+      "role": "user",
+      "isVerified": false,
+      "createdAt": "2026-09-10T17:57:55.536Z",
+      "updatedAt": "2026-09-10T17:57:55.536Z",
+      "passwordHash": "$2a$10$rBQvJ0QltpxH9Fz9GVTjseLyGbfJIaZIiE8i3kvK4vAyx08kh3eWa"
     }
   ],
   "profiles": [
@@ -2303,6 +2349,225 @@
       },
       "createdAt": "2026-08-30T16:23:48.581Z",
       "updatedAt": "2026-08-30T16:23:48.581Z"
+    },
+    {
+      "id": "4866ae80-06ca-4762-9b92-59dfe430bc8a",
+      "userId": "d05ff970-de68-4e65-8fe5-7f9a926541ef",
+      "name": "reg_1789063073576_0.0066418770010594486",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [],
+      "foodPreferences": [],
+      "musicInterests": [],
+      "photos": [],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-09-10T17:57:54.256Z",
+      "updatedAt": "2026-09-10T17:57:54.256Z"
+    },
+    {
+      "id": "70edcfc1-c96d-4e56-99ad-1b7c4ad02d3e",
+      "userId": "37e89d33-5068-4a29-b532-033751a09674",
+      "name": "login_1789063074313_0.1346641713148391",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [],
+      "foodPreferences": [],
+      "musicInterests": [],
+      "photos": [],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-09-10T17:57:54.498Z",
+      "updatedAt": "2026-09-10T17:57:54.498Z"
+    },
+    {
+      "id": "6b3523a9-06a3-45da-b20e-365523a897b0",
+      "userId": "75d096ba-96d1-453f-a705-90abf077448c",
+      "name": "Bhima",
+      "age": 25,
+      "gender": "male",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [
+        "music",
+        "travel",
+        "coding",
+        "movies"
+      ],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [
+        "hiking",
+        "gaming"
+      ],
+      "foodPreferences": [
+        "spicy",
+        "veg"
+      ],
+      "musicInterests": [
+        "rock",
+        "folk"
+      ],
+      "photos": [],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-09-10T17:57:54.877Z",
+      "updatedAt": "2026-09-10T17:57:54.917Z"
+    },
+    {
+      "id": "da0fda33-b7f8-4805-a682-ce4474aa71d0",
+      "userId": "eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "name": "match_a_1789063075083_0.6982226952039501",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [],
+      "foodPreferences": [],
+      "musicInterests": [],
+      "photos": [],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-09-10T17:57:55.348Z",
+      "updatedAt": "2026-09-10T17:57:55.348Z"
+    },
+    {
+      "id": "6f0593b6-195b-49b0-937c-40597f214d4f",
+      "userId": "ec6b4084-8f16-4a86-a10f-45f73a6d2d5c",
+      "name": "match_b_1789063075083_0.755514457611973",
+      "age": 25,
+      "gender": "other",
+      "city": "Ranchi",
+      "location": {
+        "latitude": 23.3441,
+        "longitude": 85.3096,
+        "city": "Ranchi",
+        "country": "India"
+      },
+      "education": "",
+      "profession": "",
+      "relationshipGoal": "marriage",
+      "bio": "",
+      "interests": [],
+      "languages": [
+        "Hindi",
+        "English"
+      ],
+      "hobbies": [],
+      "foodPreferences": [],
+      "musicInterests": [],
+      "photos": [],
+      "preferences": {
+        "minAge": 18,
+        "maxAge": 60,
+        "maxDistanceKm": 50,
+        "preferredGenders": [
+          "female",
+          "male"
+        ],
+        "relationshipGoals": [
+          "marriage"
+        ]
+      },
+      "createdAt": "2026-09-10T17:57:55.536Z",
+      "updatedAt": "2026-09-10T17:57:55.536Z"
     }
   ],
   "likes": [
@@ -2419,6 +2684,18 @@
       "fromUserId": "ae398e4e-f455-4661-a997-39159535ab11",
       "toUserId": "4fcd1309-f1fd-45cb-8823-60592aabe6bd",
       "createdAt": "2026-08-30T07:52:33.963Z"
+    },
+    {
+      "id": "73bfb910-97d5-48ab-b8aa-dd78e2c8e01b",
+      "fromUserId": "eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "toUserId": "ec6b4084-8f16-4a86-a10f-45f73a6d2d5c",
+      "createdAt": "2026-09-10T17:57:55.581Z"
+    },
+    {
+      "id": "67d8345b-6b9e-4fde-87c6-943c07fbe074",
+      "fromUserId": "ec6b4084-8f16-4a86-a10f-45f73a6d2d5c",
+      "toUserId": "eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "createdAt": "2026-09-10T17:57:55.613Z"
     }
   ],
   "matches": [
@@ -2484,6 +2761,24 @@
       "userBId": "ae398e4e-f455-4661-a997-39159535ab11",
       "matchedAt": "2026-08-30T07:52:33.979Z",
       "isActive": true
+    },
+    {
+      "id": "0301f7d4-2b4c-422a-bc6c-d5925aa3bfdd",
+      "userAId": "ec6b4084-8f16-4a86-a10f-45f73a6d2d5c",
+      "userBId": "eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "matchedAt": "2026-09-10T17:57:55.631Z",
+      "isActive": true
+    }
+  ],
+  "chats": [
+    {
+      "id": "076eb7d2-5377-4e1c-b62b-deaf1dd77ac3",
+      "chatId": "chat_ec6b4084-8f16-4a86-a10f-45f73a6d2d5c_eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "senderId": "eee15dea-0df6-4e9f-a484-283bdfb94a5e",
+      "receiverId": "ec6b4084-8f16-4a86-a10f-45f73a6d2d5c",
+      "content": "Hey! It's a match! 🎉 Loved your profile.",
+      "messageType": "system",
+      "createdAt": "2026-09-10T17:57:55.642Z"
     }
   ]
 }

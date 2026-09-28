@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import { HeaderBar } from './components/HeaderBar';
@@ -23,6 +23,7 @@ export function AppContent() {
   const { user } = useAuth();
   const { activeMatch, triggerMatchCelebration, closeMatchModal, sendWebSocketEvent } = useNotifications();
   const navigate = useNavigate();
+  const location = useLocation();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [inspectingCandidate, setInspectingCandidate] = useState<Candidate | null>(null);
@@ -149,10 +150,16 @@ export function AppContent() {
     }
   };
 
+  const isPublicFullscreen = 
+    location.pathname === '/' || 
+    location.pathname === '/landing' || 
+    location.pathname === '/register' || 
+    location.pathname === '/login';
+
   return (
-    <div className="card-container">
-      <HeaderBar candidatesCount={candidates.length} />
-      <main className="main-content">
+    <div className={`card-container ${isPublicFullscreen ? 'no-sidebar' : ''}`}>
+      {!isPublicFullscreen && <HeaderBar candidatesCount={candidates.length} />}
+      <main className="main-content" style={isPublicFullscreen ? { marginLeft: 0, padding: 0 } : undefined}>
         <Routes>
           {/* PUBLIC UNPROTECTED ROUTES */}
           <Route path="/" element={<LandingPage candidates={candidates} />} />
